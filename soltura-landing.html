@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Soltura</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500;1,9..144,600&family=Work+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#efece1;
+    --paper-raised:#ffffff;
+    --ink:#22261e;
+    --ink-soft:#5c6152;
+    --ink-faint:#93968a;
+    --moss:#3f5636;
+    --moss-deep:#2b3b25;
+    --moss-soft:#e3e9db;
+    --coral:#dd5327;
+    --coral-soft:#fbe4d8;
+    --line:#ddd7c6;
+    --line-soft:#e6e1d3;
+    --shadow-soft:0 1px 2px rgba(34,38,30,0.05), 0 10px 26px -16px rgba(34,38,30,0.18);
+    --shadow-lift:0 24px 60px -24px rgba(34,38,30,0.35);
+    --revisar-bg:#fff2cf;
+    --revisar-ink:#7a5a12;
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root{
+      --paper:#191b15;
+      --paper-raised:#22251c;
+      --ink:#f1efe2;
+      --ink-soft:#b6b8a9;
+      --ink-faint:#7d8072;
+      --moss:#8fae7c;
+      --moss-soft:#2a331f;
+      --coral:#ef7143;
+      --coral-soft:#3a2419;
+      --line:#333527;
+      --line-soft:#2a2c21;
+      --shadow-soft:0 1px 2px rgba(0,0,0,0.3), 0 10px 26px -16px rgba(0,0,0,0.5);
+      --shadow-lift:0 24px 60px -24px rgba(0,0,0,0.6);
+      --revisar-bg:#3a3115;
+      --revisar-ink:#e8c667;
+    }
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Work Sans', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing:antialiased;
+    line-height:1.55;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', ui-serif, Georgia, serif;
+    margin:0;
+    text-wrap:balance;
+    letter-spacing:-0.01em;
+    font-weight:600;
+  }
+  p{margin:0;}
+  a{color:inherit;}
+  .mono{font-family:'IBM Plex Mono', ui-monospace, monospace; font-variant-numeric:tabular-nums;}
+  .wrap{max-width:1080px; margin:0 auto; padding:0 32px;}
+  .prose-wrap{max-width:680px; margin:0 auto; padding:0 32px;}
+
+  .tag-revisar{
+    display:inline-block; font-family:'IBM Plex Mono'; font-size:10.5px; font-weight:600;
+    background:var(--revisar-bg); color:var(--revisar-ink);
+    padding:2px 7px; border-radius:5px; letter-spacing:.02em;
+    vertical-align:middle; white-space:nowrap;
+  }
+
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:7px;
+    font-size:13px; font-weight:600; color:var(--moss);
+    text-transform:uppercase; letter-spacing:0.08em;
+    font-family:'Work Sans';
+  }
+  .eyebrow::before{content:"●"; font-size:8px; color:var(--coral);}
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:sticky; top:0; z-index:40;
+    background:var(--paper);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .nav-inner{
+    max-width:1080px; margin:0 auto; padding:18px 32px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .brand{display:flex; align-items:center; gap:10px; font-family:'Fraunces'; font-weight:600; font-size:21px;}
+  .brand-mark{
+    width:28px;height:28px;border-radius:50%;
+    background:conic-gradient(from -40deg, var(--moss), var(--coral) 50%, var(--moss));
+    position:relative; flex:none;
+  }
+  .brand-mark::after{
+    content:"";position:absolute; inset:6px; border-radius:50%;
+    background:var(--paper);
+  }
+  nav.links{display:flex; gap:28px; font-size:14.5px; color:var(--ink-soft); font-weight:500;}
+  nav.links a{text-decoration:none;}
+  nav.links a:hover{color:var(--ink);}
+  .btn{
+    background:var(--ink); color:var(--paper);
+    padding:10px 20px; border-radius:100px; font-size:14px; font-weight:600;
+    display:inline-flex; align-items:center; gap:8px;
+    box-shadow:var(--shadow-soft); text-decoration:none; border:none; cursor:pointer;
+    font-family:'Work Sans';
+  }
+  @media (max-width:760px){ nav.links{display:none;} }
+
+  /* ---------- HERO ---------- */
+  .hero{padding:64px 0 88px;}
+  .hero-grid{display:grid; grid-template-columns:1.05fr 0.95fr; gap:56px; align-items:center;}
+  .hero h1{font-size:44px; line-height:1.14; margin-top:18px;}
+  .hero-sub{margin-top:20px; font-size:18px; line-height:1.6; color:var(--ink-soft); max-width:46ch;}
+  .hero-sub strong{color:var(--ink); font-weight:600;}
+  .hero-cta{margin-top:30px; display:flex; align-items:center; gap:12px; flex-wrap:wrap;}
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr;}
+    .hero h1{font-size:34px;}
+  }
+
+  /* phone mock */
+  .phone{
+    background:var(--paper-raised); border:1px solid var(--line);
+    border-radius:26px; box-shadow:var(--shadow-lift);
+    max-width:340px; margin:0 auto; padding:22px 22px 26px;
+  }
+  .phone-head{display:flex; align-items:center; justify-content:space-between; font-size:12.5px; color:var(--ink-faint); font-weight:600;}
+  .toggle{
+    display:flex; background:var(--line-soft); border-radius:100px; padding:3px; margin-top:16px; font-size:12.5px; font-weight:600;
+  }
+  .toggle span{flex:1; text-align:center; padding:7px 8px; border-radius:100px; color:var(--ink-soft);}
+  .toggle span.active{background:var(--ink); color:var(--paper);}
+
+  .dial-wrap{display:flex; flex-direction:column; align-items:center; margin:26px 0 6px;}
+  .dial-caption{margin-top:10px; font-size:12.5px; color:var(--ink-faint); text-align:center;}
+
+  .routine-list{margin-top:18px; display:flex; flex-direction:column; gap:9px;}
+  .routine-item{
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+    padding:10px 13px; border:1px solid var(--line-soft); border-radius:12px;
+    font-size:13px; font-weight:500; background:var(--paper);
+  }
+  .routine-item .dur{color:var(--ink-faint); font-size:12px; flex:none;}
+  .routine-note{margin-top:12px; text-align:center; font-size:11.5px; color:var(--ink-faint);}
+
+  /* ---------- ESSAY SECTIONS ---------- */
+  section.essay{padding:88px 0; border-top:1px solid var(--line-soft); position:relative;}
+  .essay-num{
+    font-family:'Fraunces'; font-weight:700; font-size:260px; line-height:1;
+    position:absolute; top:20px; right:32px; color:var(--moss); opacity:.08;
+    pointer-events:none; user-select:none;
+  }
+  .lead{
+    font-family:'Fraunces'; font-weight:600; font-size:30px; line-height:1.3;
+    margin-top:18px;
+  }
+  .body-text{margin-top:22px; font-size:17.5px; line-height:1.7; color:var(--ink-soft);}
+  .body-text + .body-text{margin-top:18px;}
+  .pull{
+    font-family:'Fraunces'; font-style:italic; font-weight:500;
+    font-size:26px; line-height:1.4; color:var(--moss);
+    margin:32px 0; padding-left:22px; border-left:3px solid var(--coral);
+  }
+  .closing{
+    margin-top:26px; font-size:18px; line-height:1.65; font-weight:500; color:var(--ink);
+  }
+  .callout{
+    margin:30px 0; padding:20px 22px; border-radius:14px;
+    background:var(--coral-soft); border:1px solid color-mix(in srgb, var(--coral) 30%, transparent);
+    font-size:15.5px; line-height:1.6; color:var(--ink);
+    display:flex; gap:12px; align-items:flex-start;
+  }
+  .callout .mark{font-size:18px; line-height:1.5; flex:none;}
+
+  /* ---------- FINAL CTA ---------- */
+  .final-cta{
+    padding:80px 0 96px; text-align:center;
+  }
+  .final-cta h2{font-size:32px; max-width:20ch; margin:0 auto;}
+  .final-cta p{margin-top:16px; color:var(--ink-soft); font-size:16px;}
+  .final-cta .hero-cta{justify-content:center; margin-top:28px;}
+
+  footer{
+    border-top:1px solid var(--line-soft); padding:40px 0; text-align:center;
+    color:var(--ink-faint); font-size:13px;
+  }
+  footer .brand{justify-content:center; margin-bottom:10px; font-size:17px;}
+  footer .fine{margin-top:6px; max-width:52ch; margin-left:auto; margin-right:auto;}
+
+  @media (prefers-reduced-motion: no-preference){
+    .dial-arc{animation:draw 1.1s ease-out both;}
+  }
+  @keyframes draw{ from{stroke-dashoffset:283;} to{stroke-dashoffset:71;} }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand"><span class="brand-mark"></span>Soltura</div>
+    <nav class="links">
+      <a href="#por-que">Por qué seis minutos</a>
+      <a href="#no-hace">Lo que no hace</a>
+    </nav>
+    <a class="btn" href="#empezar">Únete a la lista de espera</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Movilidad de escritorio</span>
+      <h1>Rutinas de movilidad de seis minutos para quien pasa ocho horas sentado.</h1>
+      <p class="hero-sub">De pie o en tu silla. <strong>Con tu ropa de trabajo. Sin equipo.</strong> Soltura no sustituye el ejercicio — te devuelve rango de movimiento en los minutos que sí tienes.</p>
+      <div class="hero-cta">
+        <a class="btn" href="#empezar" id="empezar">Únete a la lista de espera</a>
+        <span class="tag-revisar">[REVISAR: modelo de acceso — lista de espera vs. descarga directa]</span>
+      </div>
+    </div>
+
+    <div class="phone">
+      <div class="phone-head">
+        <span>HOY · MARTES <span class="tag-revisar" style="margin-left:4px;">[REVISAR]</span></span>
+        <span>6:00</span>
+      </div>
+      <div class="toggle">
+        <span class="active">De pie</span>
+        <span>En tu silla</span>
+      </div>
+      <div class="dial-wrap">
+        <svg width="150" height="150" viewBox="0 0 100 100">
+          <circle cx="50" cy="50" r="45" fill="none" stroke="var(--line)" stroke-width="2"/>
+          <g stroke="var(--ink-faint)" stroke-width="2">
+            <line x1="50" y1="6" x2="50" y2="12"/>
+            <line x1="50" y1="94" x2="50" y2="88"/>
+            <line x1="6" y1="50" x2="12" y2="50"/>
+            <line x1="94" y1="50" x2="88" y2="50"/>
+            <line x1="18.7" y1="18.7" x2="22.8" y2="22.8"/>
+            <line x1="81.3" y1="18.7" x2="77.2" y2="22.8"/>
+            <line x1="18.7" y1="81.3" x2="22.8" y2="77.2"/>
+            <line x1="81.3" y1="81.3" x2="77.2" y2="77.2"/>
+          </g>
+          <circle class="dial-arc" cx="50" cy="50" r="45" fill="none" stroke="var(--coral)" stroke-width="4"
+            stroke-linecap="round" transform="rotate(-90 50 50)"
+            stroke-dasharray="283" stroke-dashoffset="71"/>
+          <text x="50" y="47" text-anchor="middle" font-family="IBM Plex Mono" font-size="15" font-weight="600" fill="var(--ink)">6:00</text>
+          <text x="50" y="61" text-anchor="middle" font-family="Work Sans" font-size="7" fill="var(--ink-faint)">hoy</text>
+        </svg>
+        <div class="dial-caption">Una rutina. Una vez al día.</div>
+      </div>
+      <div class="routine-list">
+        <div class="routine-item"><span>Cuello y hombros</span><span class="dur mono">1:00</span></div>
+        <div class="routine-item"><span>Muñecas y antebrazos</span><span class="dur mono">1:00</span></div>
+        <div class="routine-item"><span>Columna torácica</span><span class="dur mono">1:00</span></div>
+        <div class="routine-item"><span>Cadera y glúteos</span><span class="dur mono">1:00</span></div>
+        <div class="routine-item"><span>Tobillos y pies</span><span class="dur mono">1:00</span></div>
+        <div class="routine-item"><span>Respiración y cierre</span><span class="dur mono">1:00</span></div>
+      </div>
+      <div class="routine-note">Rutina de ejemplo <span class="tag-revisar">[REVISAR]</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="essay" id="por-que">
+  <div class="essay-num">6</div>
+  <div class="prose-wrap">
+    <span class="eyebrow">Por qué seis minutos</span>
+    <p class="lead">La mayoría de los programas de movilidad fallan por exceso.</p>
+    <p class="body-text">Piden veinte minutos, un tapete, ropa deportiva y un momento del día que nadie tiene.</p>
+    <p class="pull">El cuerpo no necesita esa ceremonia: necesita frecuencia.</p>
+    <p class="body-text">Una articulación que se mueve a su rango completo una vez al día mantiene mucho más que una que recibe una sesión heroica los domingos y nada el resto de la semana.</p>
+    <p class="body-text">Seis minutos no es una cifra de marketing, es el punto donde la rutina deja de negociarse. Por debajo de diez minutos, la decisión de hacerla ya no compite con la comida, el transporte ni la junta siguiente.</p>
+    <p class="closing">Sabemos que no es lo óptimo. Es lo que se sostiene, y lo que se sostiene siempre le gana a lo óptimo abandonado en la semana tres.</p>
+  </div>
+</section>
+
+<section class="essay" id="no-hace">
+  <div class="prose-wrap">
+    <span class="eyebrow">Lo que Soltura no hace</span>
+    <p class="lead">No cuenta calorías, no mide tu progreso contra el de nadie, no te castiga por faltar.</p>
+    <p class="body-text">No hay rachas que perder, porque una racha rota es la razón número uno por la que la gente desinstala una app de hábitos.</p>
+    <div class="callout">
+      <span class="mark">⚑</span>
+      <span>Tampoco trata lesiones. Si tienes dolor agudo, irradiado o entumecimiento, lo que necesitas es un fisioterapeuta — no una app.</span>
+    </div>
+    <p class="closing">Soltura hace una sola cosa —devolverle rango a un cuerpo que pasa el día quieto— y prefiere hacerla bien a hacer diez a medias.</p>
+  </div>
+</section>
+
+<section class="final-cta">
+  <div class="wrap">
+    <h2>Seis minutos, una vez al día. Empieza cuando quieras.</h2>
+    <p>Sin tapete, sin ropa deportiva, sin ceremonia.</p>
+    <div class="hero-cta">
+      <a class="btn" href="#empezar">Únete a la lista de espera</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="brand"><span class="brand-mark"></span>Soltura</div>
+    <div>Rutinas de movilidad de seis minutos para quien pasa ocho horas sentado.</div>
+    <div class="fine">Soltura no sustituye el ejercicio ni el consejo médico profesional.</div>
+  </div>
+</footer>
+
+</body>
+</html>
