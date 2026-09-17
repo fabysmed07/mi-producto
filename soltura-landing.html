@@ -138,8 +138,15 @@
   .toggle{
     display:flex; background:var(--line-soft); border-radius:100px; padding:3px; margin-top:16px; font-size:12.5px; font-weight:600;
   }
-  .toggle span{flex:1; text-align:center; padding:7px 8px; border-radius:100px; color:var(--ink-soft);}
-  .toggle span.active{background:var(--ink); color:var(--paper);}
+  .toggle button{
+    flex:1; text-align:center; padding:7px 8px; border-radius:100px; color:var(--ink-soft);
+    background:none; border:none; font:inherit; cursor:pointer;
+    transition:background .15s ease, color .15s ease;
+  }
+  .toggle button:hover{color:var(--ink);}
+  .toggle button:focus-visible{outline:2px solid var(--coral); outline-offset:2px;}
+  .toggle button.active{background:var(--ink); color:var(--paper);}
+  .toggle button.active:hover{color:var(--paper);}
 
   .dial-wrap{display:flex; flex-direction:column; align-items:center; margin:26px 0 6px;}
   .dial-caption{margin-top:10px; font-size:12.5px; color:var(--ink-faint); text-align:center;}
@@ -233,9 +240,9 @@
         <span>HOY · MARTES <span class="tag-revisar" style="margin-left:4px;">[REVISAR]</span></span>
         <span>6:00</span>
       </div>
-      <div class="toggle">
-        <span class="active">De pie</span>
-        <span>En tu silla</span>
+      <div class="toggle" role="group" aria-label="Posición de la rutina">
+        <button type="button" class="active" data-mode="pie" aria-pressed="true">De pie</button>
+        <button type="button" data-mode="silla" aria-pressed="false">En tu silla</button>
       </div>
       <div class="dial-wrap">
         <svg width="150" height="150" viewBox="0 0 100 100">
@@ -259,14 +266,14 @@
         <div class="dial-caption">Una rutina. Una vez al día.</div>
       </div>
       <div class="routine-list">
-        <div class="routine-item"><span>Cuello y hombros</span><span class="dur mono">1:00</span></div>
-        <div class="routine-item"><span>Muñecas y antebrazos</span><span class="dur mono">1:00</span></div>
-        <div class="routine-item"><span>Columna torácica</span><span class="dur mono">1:00</span></div>
-        <div class="routine-item"><span>Cadera y glúteos</span><span class="dur mono">1:00</span></div>
-        <div class="routine-item"><span>Tobillos y pies</span><span class="dur mono">1:00</span></div>
-        <div class="routine-item"><span>Respiración y cierre</span><span class="dur mono">1:00</span></div>
+        <div class="routine-item"><span class="label" data-pie="Cuello y hombros" data-silla="Cuello y hombros">Cuello y hombros</span><span class="dur mono">1:00</span></div>
+        <div class="routine-item"><span class="label" data-pie="Muñecas y antebrazos" data-silla="Muñecas y antebrazos">Muñecas y antebrazos</span><span class="dur mono">1:00</span></div>
+        <div class="routine-item"><span class="label" data-pie="Rotación de tronco de pie" data-silla="Rotación de tronco sentado">Rotación de tronco de pie</span><span class="dur mono">1:00</span></div>
+        <div class="routine-item"><span class="label" data-pie="Zancada estática" data-silla="Elevación de rodilla sentado">Zancada estática</span><span class="dur mono">1:00</span></div>
+        <div class="routine-item"><span class="label" data-pie="Elevación de talones" data-silla="Círculos de tobillo sentado">Elevación de talones</span><span class="dur mono">1:00</span></div>
+        <div class="routine-item"><span class="label" data-pie="Respiración y cierre" data-silla="Respiración y cierre">Respiración y cierre</span><span class="dur mono">1:00</span></div>
       </div>
-      <div class="routine-note">Rutina de ejemplo <span class="tag-revisar">[REVISAR]</span></div>
+      <div class="routine-note">Rutina de ejemplo — los movimientos se adaptan a tu posición <span class="tag-revisar">[REVISAR]</span></div>
     </div>
   </div>
 </section>
@@ -314,6 +321,20 @@
     <div class="fine">Soltura no sustituye el ejercicio ni el consejo médico profesional.</div>
   </div>
 </footer>
+
+<script>
+  const toggleButtons = document.querySelectorAll('.toggle button');
+  const labels = document.querySelectorAll('.routine-item .label');
+  toggleButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      toggleButtons.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-pressed', 'true');
+      const mode = btn.dataset.mode;
+      labels.forEach(label => { label.textContent = label.dataset[mode]; });
+    });
+  });
+</script>
 
 </body>
 </html>
