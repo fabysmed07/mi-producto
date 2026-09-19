@@ -96,14 +96,11 @@
   }
   .brand{display:flex; align-items:center; gap:10px; font-family:'Fraunces'; font-weight:600; font-size:21px;}
   .brand-mark{
-    width:28px;height:28px;border-radius:50%;
+    width:32px;height:32px;border-radius:50%;
     background:conic-gradient(from -40deg, var(--moss), var(--coral) 50%, var(--moss));
-    position:relative; flex:none;
+    display:inline-flex; align-items:center; justify-content:center; flex:none;
   }
-  .brand-mark::after{
-    content:"";position:absolute; inset:6px; border-radius:50%;
-    background:var(--paper);
-  }
+  .brand-mark svg{width:22px; height:22px; display:block;}
   nav.links{display:flex; gap:28px; font-size:14.5px; color:var(--ink-soft); font-weight:500;}
   nav.links a{text-decoration:none;}
   nav.links a:hover{color:var(--ink);}
@@ -202,6 +199,8 @@
     color:var(--ink-faint); font-size:13px;
   }
   footer .brand{justify-content:center; margin-bottom:10px; font-size:17px;}
+  footer .brand-mark{width:26px; height:26px;}
+  footer .brand-mark svg{width:18px; height:18px;}
   footer .fine{margin-top:6px; max-width:52ch; margin-left:auto; margin-right:auto;}
 
   @media (prefers-reduced-motion: no-preference){
@@ -244,7 +243,7 @@
 
 <header class="nav">
   <div class="nav-inner">
-    <div class="brand"><span class="brand-mark"></span>Soltura</div>
+    <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--paper)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="15.4" cy="7" r="1.9" fill="var(--paper)" stroke="none"/><path d="M11.4 10.6C10.4 6.2 14 2.6 19.6 3.4"/><path d="M11.4 10.6c.4 2.2.4 3.6.3 5.2"/><path d="M11.7 15.8L8.6 21M11.7 15.8l3.2 5.2"/><path d="M12.4 11.2l3 3.4"/></svg></span>Soltura</div>
     <nav class="links">
       <a href="#por-que">Por qué seis minutos</a>
       <a href="#no-hace">Lo que no hace</a>
@@ -346,7 +345,7 @@
 
 <footer>
   <div class="wrap">
-    <div class="brand"><span class="brand-mark"></span>Soltura</div>
+    <div class="brand"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="var(--paper)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="15.4" cy="7" r="1.9" fill="var(--paper)" stroke="none"/><path d="M11.4 10.6C10.4 6.2 14 2.6 19.6 3.4"/><path d="M11.4 10.6c.4 2.2.4 3.6.3 5.2"/><path d="M11.7 15.8L8.6 21M11.7 15.8l3.2 5.2"/><path d="M12.4 11.2l3 3.4"/></svg></span>Soltura</div>
     <div>Rutinas de movilidad de seis minutos para quien pasa ocho horas sentado.</div>
     <div class="fine">Soltura no sustituye el ejercicio ni el consejo médico profesional.</div>
   </div>
