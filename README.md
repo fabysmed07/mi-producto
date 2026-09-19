@@ -1,5 +1,11 @@
 Soltura: rutinas de movilidad de seis minutos para quien pasa ocho horas sentado.
 
+## Reacción
+
+**Entendió:** Para una no fue claro lo que ofrece la página, le pareció un título muy racional en vez de inspirador y muy sencilla. Pero para la otra le pareció claro el objetivo.
+
+**No entendió:** ¿Por qué solamente para quien pasa 8 horas sentado? Y si lo quiere realizar una persona que apenas solo lleva 2 horas sentado.
+
 
 
 Qué fue lo primero que dijo: "Ah, ok... ¿esto es como una app de estiramientos? Se ve limpio. 'Seis minutos para quien pasa ocho horas sentado' — sí, eso soy yo."
