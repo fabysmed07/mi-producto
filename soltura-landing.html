@@ -237,6 +237,124 @@
     .btn{padding:9px 14px; font-size:13px;}
     .brand{font-size:18px; gap:8px;}
   }
+/* ---------- WIDGET DE RUTINA (orbe que respira) ---------- */
+.phone[data-widget]{position:relative; overflow:hidden; width:100%; max-width:348px; --play:color-mix(in srgb, var(--coral) 80%, #000);}
+[data-widget] button{font-family:inherit;}
+:where([data-widget]) i[data-icon]{display:inline-flex; width:16px; height:16px; flex:none;}
+:where([data-widget]) i[data-icon] svg{width:100%; height:100%;}
+[data-widget] i.i-pause{display:none;}
+[data-widget][data-running="true"] i.i-pause{display:inline-flex;}
+[data-widget][data-running="true"] i.i-play{display:none;}
+
+/* Toggle De pie / En tu silla, con pastilla deslizante */
+.seg{
+  position:relative; display:grid; grid-template-columns:1fr 1fr;
+  background:var(--seg-bg, var(--line-soft)); border-radius:100px; padding:3px;
+  margin-top:16px; font-size:12.5px; font-weight:600;
+}
+.seg-thumb{
+  position:absolute; top:3px; bottom:3px; left:3px; width:calc(50% - 3px); border-radius:100px;
+  background:var(--seg-thumb, var(--ink));
+  transform:translateX(calc(var(--i, 0) * 100%));
+  transition:transform .38s cubic-bezier(.3,1.25,.5,1);
+}
+.seg button{
+  position:relative; z-index:1; display:inline-flex; align-items:center; justify-content:center; gap:7px;
+  padding:8px 8px; background:none; border:none; border-radius:100px; cursor:pointer;
+  color:var(--seg-ink, var(--ink-soft)); font:inherit; transition:color .25s ease;
+}
+.seg button:hover{color:var(--seg-hover, var(--ink));}
+.seg button.active,.seg button.active:hover{color:var(--seg-thumb-ink, var(--paper));}
+.seg button:focus-visible{outline:2px solid var(--coral); outline-offset:2px;}
+
+.icon-btn{
+  width:40px; height:40px; border-radius:50%; border:1px solid var(--line); background:var(--paper); color:var(--ink);
+  display:inline-grid; place-items:center; cursor:pointer; padding:0; transition:transform .15s ease, background .15s ease;
+}
+.icon-btn:hover{background:var(--line-soft);}
+.icon-btn:active{transform:scale(.92);}
+.icon-btn:focus-visible,.play-btn:focus-visible,[data-goto]:focus-visible{outline:2px solid var(--coral); outline-offset:2px;}
+.play-btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:9px;
+  background:var(--play); color:#fff; border:none; border-radius:100px; padding:13px 26px;
+  font-size:14.5px; font-weight:600; cursor:pointer; letter-spacing:.01em;
+  box-shadow:0 12px 24px -12px var(--play); transition:transform .15s ease, filter .15s ease;
+}
+.vb-controls .play-btn{white-space:nowrap; padding:13px 20px;}
+.play-btn:hover{filter:brightness(1.08);}
+.play-btn:active{transform:scale(.97);}
+
+.swap{animation:swap-in .45s cubic-bezier(.2,.8,.3,1) both;}
+@keyframes swap-in{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
+
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.001ms !important; animation-iteration-count:1 !important; transition-duration:.001ms !important;}
+}
+
+
+.vb{
+  padding:22px 22px 24px; border-color:transparent; --moss-orb:var(--moss); --seg-bg:color-mix(in srgb, var(--moss) 14%, transparent);
+  background:
+    radial-gradient(120% 70% at 50% 0%, color-mix(in srgb, var(--moss) 20%, transparent), transparent 70%),
+    var(--paper-raised);
+  box-shadow:var(--shadow-lift), 0 0 0 1px var(--line);
+}
+.vb[data-mode="silla"]{background:
+    radial-gradient(120% 70% at 50% 0%, color-mix(in srgb, var(--coral) 20%, transparent), transparent 70%),
+    var(--paper-raised);}
+.vb{transition:background .6s ease;}
+.vb-stage{position:relative; width:230px; height:230px; margin:20px auto 0; display:grid; place-items:center;}
+.vb-arc{position:absolute; inset:0; width:100%; height:100%;}
+.vb-arc circle{fill:none; stroke-width:2.2; stroke-linecap:round;}
+.vb-arc .track{stroke:var(--line);}
+.vb-arc .prog{stroke:var(--coral);}
+.vb-orb{position:relative; width:148px; height:148px; display:grid; place-items:center;}
+[data-running="true"] .vb-orb{animation:vb-breathe 8s ease-in-out infinite;}
+@keyframes vb-breathe{0%,100%{transform:scale(.9);} 50%{transform:scale(1.16);}}
+.vb-halo{position:absolute; inset:-14px; border-radius:50%; border:1.5px solid color-mix(in srgb, var(--moss) 40%, transparent); opacity:.5;}
+.vb-halo.h2{inset:-30px; opacity:.28;}
+[data-running="true"] .vb-halo{animation:vb-ring 8s ease-in-out infinite;}
+[data-running="true"] .vb-halo.h2{animation-delay:.5s;}
+@keyframes vb-ring{0%,100%{opacity:.15;} 50%{opacity:.6;}}
+.vb-core{
+  position:relative; width:100%; height:100%; border-radius:50%; overflow:hidden; display:grid; place-items:center; align-content:center; gap:2px; color:#fff;
+  background:radial-gradient(circle at 34% 28%, #b7d0a3, var(--moss-deep, #2b3b25) 96%);
+  box-shadow:0 22px 40px -18px color-mix(in srgb, var(--moss) 70%, #000), inset 0 -10px 24px rgba(0,0,0,.18);
+}
+.vb-core::before{
+  content:""; position:absolute; inset:0; opacity:0; transition:opacity .6s ease;
+  background:radial-gradient(circle at 34% 28%, #ffc7a8, #b93f14 96%);
+}
+.vb[data-mode="silla"] .vb-core::before{opacity:1;}
+.vb-figs{position:relative; width:46px; height:46px;}
+.vb-figs i{position:absolute; inset:0; width:100%; height:100%; transition:opacity .4s ease, transform .5s cubic-bezier(.3,1.3,.5,1);}
+.vb[data-mode="pie"] .f-silla,.vb[data-mode="silla"] .f-pie{opacity:0; transform:scale(.6);}
+.vb-time{position:relative; font-size:21px; font-weight:600; letter-spacing:.01em;}
+.vb-breath{position:relative; height:18px; margin-top:14px; text-align:center; font-size:11.5px; font-weight:600; letter-spacing:.14em; text-transform:uppercase; color:var(--moss);}
+.vb-breath span{position:absolute; inset:0;}
+.vb-breath .in,.vb-breath .out{opacity:0; display:none;}
+.vb-breath .idle{color:var(--ink-faint);}
+[data-running="true"] .vb-breath .idle{display:none;}
+[data-running="true"] .vb-breath .in,[data-running="true"] .vb-breath .out{display:block;}
+[data-running="true"] .vb-breath .in{animation:vb-in 8s ease-in-out infinite;}
+[data-running="true"] .vb-breath .out{animation:vb-out 8s ease-in-out infinite;}
+@keyframes vb-in{0%{opacity:0;} 12%,38%{opacity:1;} 50%,100%{opacity:0;}}
+@keyframes vb-out{0%,50%{opacity:0;} 62%,88%{opacity:1;} 100%{opacity:0;}}
+.vb-now{text-align:center; margin-top:16px; min-height:104px;}
+.vb-kicker{font-size:10.5px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-faint);}
+.vb-now h3{font-size:23px; line-height:1.2; margin-top:5px;}
+.vb-now p{margin:7px auto 0; font-size:13.5px; line-height:1.5; color:var(--ink-soft); max-width:27ch;}
+.vb-controls{display:flex; justify-content:center; align-items:center; gap:12px; margin-top:8px;}
+.icon-btn:disabled{opacity:.35; cursor:default; pointer-events:none;}
+.vb-reset{transition:opacity .25s ease, transform .15s ease, background .15s ease;}
+.vb[data-started="false"] .vb-reset{opacity:0; visibility:hidden;}
+.vb-dots{display:flex; justify-content:center; gap:7px; margin-top:20px;}
+.vb-dots button{width:9px; height:9px; border-radius:100px; border:none; padding:0; background:var(--line); cursor:pointer; transition:all .3s ease;}
+.vb-dots button.done{background:var(--moss);}
+.vb-dots button.current{width:26px; background:var(--coral);}
+@media (max-width:600px){ .vb{padding:18px 16px 22px;} .vb-stage{width:210px; height:210px;} .vb-orb{width:134px; height:134px;} }
+
 </style>
 </head>
 <body>
@@ -259,51 +377,50 @@
       <h1>Date seis minutos. Tu cuerpo lo va a notar.</h1>
       <p class="hero-sub">No tienes que hacer más ejercicio ni ser constante a la perfección. Solo regálate una pausa para volver a sentirte suelto, de pie o en tu silla. Con tu ropa de trabajo, sin equipo, sin cambiarte.</p>
       <div class="hero-cta">
-        <a class="btn" href="#">Empezar mi rutina de hoy</a>
+        <a class="btn" href="#">Empezar mi rutina</a>
         <span class="tag-revisar">[REVISAR: destino del CTA — abrir la app, descarga en tienda, demo web, etc.]</span>
       </div>
     </div>
 
-    <div class="phone">
-      <div class="phone-head">
-        <span>HOY · MARTES <span class="tag-revisar" style="margin-left:4px;">[REVISAR]</span></span>
+    <div class="phone vb" data-widget>
+  <div class="phone-head">
+        <span>TU RUTINA <span class="tag-revisar" style="margin-left:4px;">[REVISAR]</span></span>
         <span>6:00</span>
       </div>
-      <div class="toggle" role="group" aria-label="Posición de la rutina">
-        <button type="button" class="active" data-mode="pie" aria-pressed="true">De pie</button>
-        <button type="button" data-mode="silla" aria-pressed="false">En tu silla</button>
+  <div class="seg" role="group" aria-label="Posición de la rutina">
+        <span class="seg-thumb" aria-hidden="true"></span>
+        <button type="button" class="active" data-mode="pie" aria-pressed="true"><i data-icon="pie"></i>De pie</button>
+        <button type="button" data-mode="silla" aria-pressed="false"><i data-icon="silla"></i>En tu silla</button>
       </div>
-      <div class="dial-wrap">
-        <svg width="150" height="150" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="45" fill="none" stroke="var(--line)" stroke-width="2"/>
-          <g stroke="var(--ink-faint)" stroke-width="2">
-            <line x1="50" y1="6" x2="50" y2="12"/>
-            <line x1="50" y1="94" x2="50" y2="88"/>
-            <line x1="6" y1="50" x2="12" y2="50"/>
-            <line x1="94" y1="50" x2="88" y2="50"/>
-            <line x1="18.7" y1="18.7" x2="22.8" y2="22.8"/>
-            <line x1="81.3" y1="18.7" x2="77.2" y2="22.8"/>
-            <line x1="18.7" y1="81.3" x2="22.8" y2="77.2"/>
-            <line x1="81.3" y1="81.3" x2="77.2" y2="77.2"/>
-          </g>
-          <circle class="dial-arc" cx="50" cy="50" r="45" fill="none" stroke="var(--coral)" stroke-width="4"
-            stroke-linecap="round" transform="rotate(-90 50 50)"
-            stroke-dasharray="283" stroke-dashoffset="71"/>
-          <text x="50" y="47" text-anchor="middle" font-family="IBM Plex Mono" font-size="15" font-weight="600" fill="var(--ink)">6:00</text>
-          <text x="50" y="61" text-anchor="middle" font-family="Work Sans" font-size="7" fill="var(--ink-faint)">hoy</text>
-        </svg>
-        <div class="dial-caption">Una rutina. Una vez al día.</div>
+  <div class="vb-stage">
+    <svg class="vb-arc" viewBox="0 0 200 200" aria-hidden="true">
+      <circle class="track" cx="100" cy="100" r="95" pathLength="100"/>
+      <circle class="prog" cx="100" cy="100" r="95" pathLength="100" stroke-dasharray="0 100" transform="rotate(-90 100 100)"/>
+    </svg>
+    <div class="vb-orb">
+      <span class="vb-halo"></span><span class="vb-halo h2"></span>
+      <div class="vb-core">
+        <div class="vb-figs"><i data-icon="pie" class="f-pie"></i><i data-icon="silla" class="f-silla"></i></div>
+        <span class="vb-time mono" data-time>1:00</span>
       </div>
-      <div class="routine-list">
-        <div class="routine-item"><span class="label" data-pie="Cuello y hombros" data-silla="Cuello y hombros">Cuello y hombros</span><span class="dur mono">1:00</span></div>
-        <div class="routine-item"><span class="label" data-pie="Muñecas y antebrazos" data-silla="Muñecas y antebrazos">Muñecas y antebrazos</span><span class="dur mono">1:00</span></div>
-        <div class="routine-item"><span class="label" data-pie="Rotación de tronco de pie" data-silla="Rotación de tronco sentado">Rotación de tronco de pie</span><span class="dur mono">1:00</span></div>
-        <div class="routine-item"><span class="label" data-pie="Zancada estática" data-silla="Elevación de rodilla sentado">Zancada estática</span><span class="dur mono">1:00</span></div>
-        <div class="routine-item"><span class="label" data-pie="Elevación de talones" data-silla="Círculos de tobillo sentado">Elevación de talones</span><span class="dur mono">1:00</span></div>
-        <div class="routine-item"><span class="label" data-pie="Respiración y cierre" data-silla="Respiración y cierre">Respiración y cierre</span><span class="dur mono">1:00</span></div>
-      </div>
-      <div class="routine-note">Rutina de ejemplo — los movimientos se adaptan a tu posición <span class="tag-revisar">[REVISAR]</span></div>
     </div>
+  </div>
+  <div class="vb-breath" aria-hidden="true">
+    <span class="idle">Respira a tu ritmo</span><span class="in">Inhala</span><span class="out">Exhala</span>
+  </div>
+  <div class="vb-now" aria-live="polite">
+    <span class="vb-kicker" data-kicker>Movimiento 1 de 6</span>
+    <h3 data-name>Cuello y hombros</h3>
+    <p data-cue>Lleva la oreja hacia el hombro, sin forzar.</p>
+  </div>
+  <div class="vb-controls">
+    <button type="button" class="icon-btn vb-reset" data-act="reset" aria-label="Reiniciar este movimiento" title="Reiniciar este movimiento"><i data-icon="reset"></i></button>
+    <button type="button" class="play-btn" data-act="toggle"><i class="i-play" data-icon="play"></i><i class="i-pause" data-icon="pause"></i><span data-play-label>Empezar</span></button>
+    <button type="button" class="icon-btn" data-act="next" aria-label="Siguiente movimiento"><i data-icon="next"></i></button>
+  </div>
+  <div class="vb-dots" data-dots role="group" aria-label="Ir a un movimiento"></div>
+  <div class="routine-note">Misma rutina: los movimientos se adaptan a tu posición <span class="tag-revisar">[REVISAR]</span></div>
+</div>
   </div>
 </section>
 
@@ -314,8 +431,9 @@
     <p class="lead">La mayoría de los programas de movilidad fallan por exceso.</p>
     <p class="body-text">Piden veinte minutos, un tapete, ropa deportiva y un momento del día que nadie tiene.</p>
     <p class="pull">El cuerpo no necesita esa ceremonia: necesita frecuencia.</p>
-    <p class="body-text">Una articulación que se mueve a su rango completo una vez al día mantiene mucho más que una que recibe una sesión heroica los domingos y nada el resto de la semana.</p>
+    <p class="body-text">Una articulación que se mueve a su rango completo con frecuencia mantiene mucho más que una que recibe una sesión heroica los domingos y nada el resto de la semana.</p>
     <p class="body-text">Seis minutos no es una cifra de marketing, es el punto donde la rutina deja de negociarse. Por debajo de diez minutos, la decisión de hacerla ya no compite con la comida, el transporte ni la junta siguiente.</p>
+    <p class="body-text">Seis minutos es una sesión, no un límite. Puedes hacerla a media mañana, después de comer y otra vez antes de cerrar la laptop. Tú decides cuántas.</p>
     <p class="closing">Sabemos que no es lo óptimo. Es lo que se sostiene, y lo que se sostiene siempre le gana a lo óptimo abandonado en la semana tres.</p>
   </div>
 </section>
@@ -335,10 +453,10 @@
 
 <section class="final-cta">
   <div class="wrap">
-    <h2>Seis minutos, una vez al día. Empieza cuando quieras.</h2>
+    <h2>Seis minutos cada vez que los necesites. Empieza cuando quieras.</h2>
     <p>Sin tapete, sin ropa deportiva, sin ceremonia.</p>
     <div class="hero-cta">
-      <a class="btn" href="#">Empezar mi rutina de hoy</a>
+      <a class="btn" href="#">Empezar mi rutina</a>
     </div>
   </div>
 </section>
@@ -352,17 +470,171 @@
 </footer>
 
 <script>
-  const toggleButtons = document.querySelectorAll('.toggle button');
-  const labels = document.querySelectorAll('.routine-item .label');
-  toggleButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-      toggleButtons.forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
-      btn.classList.add('active');
-      btn.setAttribute('aria-pressed', 'true');
-      const mode = btn.dataset.mode;
-      labels.forEach(label => { label.textContent = label.dataset[mode]; });
+/* Motor compartido de la rutina: estado, cronómetro y eventos.
+   El widget solo dibuja el estado (render). */
+(function () {
+  const DUR = 60;
+
+  const STEPS = [
+    { pie: 'Cuello y hombros', silla: 'Cuello y hombros',
+      cue: { pie: 'Lleva la oreja hacia el hombro, sin forzar.', silla: 'Lleva la oreja hacia el hombro, sin forzar.' } },
+    { pie: 'Muñecas y antebrazos', silla: 'Muñecas y antebrazos',
+      cue: { pie: 'Círculos lentos y abre y cierra las manos.', silla: 'Círculos lentos y abre y cierra las manos.' } },
+    { pie: 'Rotación de tronco de pie', silla: 'Rotación de tronco sentado',
+      cue: { pie: 'Gira desde la cintura, mira sobre el hombro.', silla: 'Gira desde la cintura, sin despegar la espalda del asiento.' } },
+    { pie: 'Zancada estática', silla: 'Elevación de rodilla sentado',
+      cue: { pie: 'Un pie adelante, baja la cadera con calma.', silla: 'Sube la rodilla hacia el pecho y alterna.' } },
+    { pie: 'Elevación de talones', silla: 'Círculos de tobillo sentado',
+      cue: { pie: 'Sube de puntitas y baja despacio.', silla: 'Dibuja círculos con la punta del pie.' } },
+    { pie: 'Respiración y cierre', silla: 'Respiración y cierre',
+      cue: { pie: 'Inhala por la nariz, suelta el aire largo.', silla: 'Inhala por la nariz, suelta el aire largo.' } },
+  ];
+
+  const svg = (body, extra = '') =>
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}>${body}</svg>`;
+  const ICONS = {
+    pie: svg('<circle cx="12" cy="4.6" r="1.9"/><path d="M12 8.4v6.4M12 14.8l-3 6M12 14.8l3 6M7.6 11.2l4.4-1.6 4.4 1.6"/>'),
+    silla: svg('<circle cx="9.5" cy="4.6" r="1.9"/><path d="M9.5 8.4v5.6h6.5v6M9.5 10.4l4 1.2M5.5 8v12M5.5 14h4"/>'),
+    play: svg('<path d="M8 5.5v13l11-6.5z" fill="currentColor"/>'),
+    pause: svg('<rect x="6.5" y="5" width="4" height="14" rx="1.2" fill="currentColor" stroke="none"/><rect x="13.5" y="5" width="4" height="14" rx="1.2" fill="currentColor" stroke="none"/>'),
+    next: svg('<path d="M7 6l8 6-8 6z" fill="currentColor"/><path d="M18 6v12"/>'),
+    prev: svg('<path d="M17 6l-8 6 8 6z" fill="currentColor"/><path d="M6 6v12"/>'),
+    reset: svg('<path d="M4.5 12a7.5 7.5 0 1 0 2.4-5.5"/><path d="M4.5 4.5v4h4"/>'),
+    check: svg('<path d="M5 12.5l4.2 4.2L19 7.2" stroke-width="2.4"/>'),
+  };
+
+  const fmt = (s) => {
+    s = Math.max(0, Math.ceil(s - 0.0001));
+    return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  };
+
+  function mount(render) {
+    const root = document.querySelector('[data-widget]');
+    const st = { mode: 'pie', idx: 0, elapsed: 0, running: false, done: false, steps: STEPS, dur: DUR, count: STEPS.length, fmt, icons: ICONS };
+
+    root.querySelectorAll('[data-icon]').forEach((el) => { el.innerHTML = ICONS[el.dataset.icon] || ''; });
+
+    function derive() {
+      st.step = STEPS[st.idx];
+      st.name = st.done ? 'Rutina completa' : st.step[st.mode];
+      st.cue = st.done ? 'Vuelve cuando tu cuerpo lo pida.' : st.step.cue[st.mode];
+      st.kicker = st.done ? `${STEPS.length} de ${STEPS.length} movimientos` : `Movimiento ${st.idx + 1} de ${STEPS.length}`;
+      st.stepRemaining = st.done ? 0 : DUR - st.elapsed;
+      st.totalRemaining = st.done ? 0 : (STEPS.length - st.idx) * DUR - st.elapsed;
+      st.progress = st.done ? 1 : st.elapsed / DUR;
+      st.totalProgress = st.done ? 1 : (st.idx * DUR + st.elapsed) / (STEPS.length * DUR);
+      st.started = st.idx > 0 || st.elapsed > 0 || st.done;
+      st.playLabel = st.done ? 'Hacer otra ronda' : st.running ? 'Pausar' : st.started ? 'Continuar' : 'Empezar';
+    }
+
+    function emit(reason) {
+      derive();
+      root.dataset.mode = st.mode;
+      root.dataset.running = st.running;
+      root.dataset.done = st.done;
+      root.dataset.started = st.started;
+      root.style.setProperty('--i', st.mode === 'pie' ? 0 : 1);
+      root.style.setProperty('--p', st.totalProgress.toFixed(4));
+      root.style.setProperty('--sp', st.progress.toFixed(4));
+      root.querySelectorAll('button[data-mode]').forEach((b) => {
+        const on = b.dataset.mode === st.mode;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-pressed', on);
+      });
+      root.querySelectorAll('[data-act="next"]').forEach((el) => { el.disabled = st.done; });
+      root.querySelectorAll('[data-play-label]').forEach((el) => { el.textContent = st.playLabel; });
+      root.querySelectorAll('[data-act="toggle"]').forEach((el) => el.setAttribute('aria-label', st.playLabel));
+      render(st, reason);
+    }
+
+    const api = {
+      setMode(m) {
+        if (m === st.mode) return;
+        // Cambiar de posición reinicia la rutina desde el primer movimiento.
+        st.mode = m; st.idx = 0; st.elapsed = 0; st.done = false; st.running = false;
+        emit('reset');
+      },
+      goto(i) { st.idx = Math.min(Math.max(i, 0), STEPS.length - 1); st.elapsed = 0; st.done = false; emit('step'); },
+      next() {
+        if (st.done) return;
+        if (st.idx >= STEPS.length - 1) { st.done = true; st.running = false; st.elapsed = 0; emit('done'); }
+        else api.goto(st.idx + 1);
+      },
+      prev() { if (st.elapsed > 3 && !st.done) { st.elapsed = 0; emit('step'); } else api.goto(st.done ? STEPS.length - 1 : st.idx - 1); },
+      reset() {
+        // Reinicia solo el movimiento actual; desde 'Listo' vuelve al inicio de la rutina.
+        if (st.done) { st.idx = 0; st.running = false; }
+        st.elapsed = 0; st.done = false;
+        emit('reset');
+      },
+      toggle() {
+        const restart = st.done;
+        if (restart) { st.idx = 0; st.elapsed = 0; st.done = false; }
+        st.running = !st.running;
+        emit(restart ? 'step' : 'toggle');
+      },
+    };
+
+    root.addEventListener('click', (e) => {
+      const mode = e.target.closest('button[data-mode]');
+      const act = e.target.closest('[data-act]');
+      const go = e.target.closest('[data-goto]');
+      if (mode) api.setMode(mode.dataset.mode);
+      else if (act) api[act.dataset.act]();
+      else if (go) api.goto(Number(go.dataset.goto));
     });
+
+    let last = performance.now();
+    setInterval(() => {
+      const now = performance.now();
+      const dt = Math.min((now - last) / 1000, 1);
+      last = now;
+      if (!st.running) return;
+      st.elapsed += dt;
+      if (st.elapsed >= DUR) {
+        st.elapsed -= DUR;
+        if (st.idx >= STEPS.length - 1) { st.done = true; st.running = false; st.elapsed = 0; emit('done'); }
+        else { st.idx += 1; emit('step'); }
+      } else {
+        emit('tick');
+      }
+    }, 100);
+
+    emit('init');
+    return api;
+  }
+
+  window.SolturaRoutine = { mount };
+})();
+
+</script>
+<script>
+(() => {
+  const root = document.querySelector('.vb');
+  const $ = (s) => root.querySelector(s);
+  const dots = $('[data-dots]');
+  for (let i = 0; i < 6; i++) {
+    const b = document.createElement('button'); b.type = 'button'; b.dataset.goto = i; b.setAttribute('aria-label', 'Ir al movimiento ' + (i + 1));
+    dots.append(b);
+  }
+  const prog = $('.prog');
+  const now = $('.vb-now');
+  SolturaRoutine.mount((st, why) => {
+    $('[data-time]').textContent = st.fmt(st.done ? 0 : st.stepRemaining);
+    prog.setAttribute('stroke-dasharray', `${st.progress * 100} 100`);
+    prog.style.strokeOpacity = st.progress < 0.006 ? 0 : 1;
+    dots.querySelectorAll('button').forEach((b, i) => {
+      b.classList.toggle('done', st.done || i < st.idx);
+      b.classList.toggle('current', !st.done && i === st.idx);
+    });
+    if (why !== 'tick' && why !== 'toggle') {
+      $('[data-kicker]').textContent = st.kicker;
+      $('[data-name]').textContent = st.name;
+      $('[data-cue]').textContent = st.cue;
+      if (why !== 'init') { now.classList.remove('swap'); void now.offsetWidth; now.classList.add('swap'); }
+    }
   });
+})();
 </script>
 
 </body>
