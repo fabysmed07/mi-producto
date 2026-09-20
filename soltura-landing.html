@@ -289,6 +289,17 @@
 .play-btn:hover{filter:brightness(1.08);}
 .play-btn:active{transform:scale(.97);}
 
+.cta-note{font-size:13.5px; color:var(--ink-soft);}
+/* El CTA del menú se oculta mientras el del hero está a la vista (conserva su espacio para que el menú no salte). */
+.nav .btn{transition:opacity .25s ease, transform .25s ease, visibility .25s;}
+.nav .btn.is-hidden{opacity:0; visibility:hidden; pointer-events:none; transform:translateY(-4px);}
+.vb{scroll-margin-top:96px;}
+.vb.pulse{animation:vb-pulse 1.2s ease-out;}
+@keyframes vb-pulse{
+  0%{box-shadow:var(--shadow-lift), 0 0 0 1px var(--line), 0 0 0 0 color-mix(in srgb, var(--coral) 55%, transparent);}
+  100%{box-shadow:var(--shadow-lift), 0 0 0 1px var(--line), 0 0 0 18px transparent;}
+}
+
 .swap{animation:swap-in .45s cubic-bezier(.2,.8,.3,1) both;}
 @keyframes swap-in{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
 
@@ -371,7 +382,7 @@
       <a href="#por-que">Por qué seis minutos</a>
       <a href="#no-hace">Lo que no hace</a>
     </nav>
-    <a class="btn" href="#">Empezar mi rutina</a>
+    <a class="btn" href="#rutina" data-cta-start>Empezar mi rutina</a>
   </div>
 </header>
 
@@ -382,12 +393,12 @@
       <h1>Date seis minutos. Tu cuerpo lo va a notar.</h1>
       <p class="hero-sub">No tienes que hacer más ejercicio ni ser constante a la perfección. Solo regálate una pausa para volver a sentirte suelto, de pie o en tu silla. Con tu ropa de trabajo, sin equipo, sin cambiarte.</p>
       <div class="hero-cta">
-        <a class="btn" href="#">Empezar mi rutina</a>
-        <span class="tag-revisar">[REVISAR: destino del CTA — abrir la app, descarga en tienda, demo web, etc.]</span>
+        <a class="btn" href="#rutina" data-cta-start>Empezar mi rutina</a>
+        <span class="cta-note">Sin cuenta ni descarga. Se hace aquí mismo.</span>
       </div>
     </div>
 
-    <div class="phone vb" data-widget>
+    <div class="phone vb" id="rutina" data-widget>
   <div class="phone-head">
         <span>TU RUTINA <span class="tag-revisar" style="margin-left:4px;">[REVISAR]</span></span>
         <span>6:00</span>
@@ -461,7 +472,7 @@
     <h2>Seis minutos cada vez que los necesites. Empieza cuando quieras.</h2>
     <p>Sin tapete, sin ropa deportiva, sin ceremonia.</p>
     <div class="hero-cta">
-      <a class="btn" href="#">Empezar mi rutina</a>
+      <a class="btn" href="#rutina" data-cta-start>Empezar mi rutina</a>
     </div>
   </div>
 </section>
@@ -624,7 +635,7 @@
   }
   const prog = $('.prog');
   const now = $('.vb-now');
-  SolturaRoutine.mount((st, why) => {
+  const routine = SolturaRoutine.mount((st, why) => {
     $('[data-time]').textContent = st.fmt(st.done ? 0 : st.stepRemaining);
     prog.setAttribute('stroke-dasharray', `${st.progress * 100} 100`);
     prog.style.strokeOpacity = st.progress < 0.006 ? 0 : 1;
@@ -638,6 +649,27 @@
       $('[data-cue]').textContent = st.cue;
       if (why !== 'init') { now.classList.remove('swap'); void now.offsetWidth; now.classList.add('swap'); }
     }
+  });
+
+  // Evita ver dos CTA iguales: el del menú aparece solo cuando el del hero ya salió de la pantalla.
+  const navCta = document.querySelector('.nav [data-cta-start]');
+  const heroCta = document.querySelector('.hero [data-cta-start]');
+  if (navCta && heroCta && 'IntersectionObserver' in window) {
+    // El margen superior descuenta la altura del menú fijo, que tapa el borde de arriba.
+    new IntersectionObserver(([entry]) => navCta.classList.toggle('is-hidden', entry.isIntersecting),
+      { rootMargin: `-${document.querySelector('.nav').offsetHeight}px 0px 0px 0px` }).observe(heroCta);
+  }
+
+  // CTA "Empezar mi rutina": lleva al widget y arranca el cronómetro solo.
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
+  document.querySelectorAll('[data-cta-start]').forEach((cta) => {
+    cta.addEventListener('click', (e) => {
+      e.preventDefault();
+      root.scrollIntoView({ behavior: reduce.matches ? 'auto' : 'smooth', block: 'center' });
+      if (root.dataset.running !== 'true') routine.toggle();
+      $('[data-act="toggle"]').focus({ preventScroll: true });
+      root.classList.remove('pulse'); void root.offsetWidth; root.classList.add('pulse');
+    });
   });
 })();
 </script>
