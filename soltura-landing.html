@@ -111,7 +111,12 @@
     box-shadow:var(--shadow-soft); text-decoration:none; border:none; cursor:pointer;
     font-family:'Work Sans';
   }
-  @media (max-width:760px){ nav.links{display:none;} }
+  section.essay{scroll-margin-top:72px;}
+  @media (max-width:760px){
+    .nav-inner{flex-wrap:wrap; row-gap:10px;}
+    nav.links{order:3; flex:0 0 100%; gap:20px; font-size:14px; overflow-x:auto; white-space:nowrap; padding-bottom:2px;}
+    section.essay{scroll-margin-top:110px;}
+  }
 
   /* ---------- HERO ---------- */
   .hero{padding:64px 0 88px;}
@@ -160,7 +165,7 @@
   /* ---------- ESSAY SECTIONS ---------- */
   section.essay{padding:88px 0; border-top:1px solid var(--line-soft); position:relative;}
   .essay-num{
-    font-family:'Fraunces'; font-weight:700; font-size:260px; line-height:1;
+    font-family:Georgia,'Times New Roman',serif; font-weight:700; font-size:260px; line-height:1;
     position:absolute; top:20px; right:32px; color:var(--moss); opacity:.08;
     pointer-events:none; user-select:none;
   }
@@ -224,7 +229,7 @@
     .tag-revisar{white-space:normal;}
     .phone{padding:18px 16px 22px;}
     section.essay{padding:56px 0;}
-    .essay-num{font-size:150px; right:20px; top:12px;}
+    .essay-num{font-size:150px; right:14px; top:6px;}
     .lead{font-size:25px;}
     .body-text{font-size:16.5px;}
     .pull{font-size:22px; padding-left:16px;}
