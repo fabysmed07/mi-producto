@@ -14,3 +14,16 @@ Qué no entendió:No sé si esto es una app que me descargo, una página web que
 
 Qué preguntó: ¿Esto es una app o una página que abro cada día? ¿Tengo que crear cuenta? ¿Cuánto cuesta / es gratis? ¿Sirve si ya tengo una lesión leve o dolor de espalda, o de plano no debería tocar eso?
 
+
+## Desarrollo
+
+Next.js (App Router) + TypeScript.
+
+```bash
+npm install
+npm run dev
+```
+
+- `/` es la landing y `/admin` el panel privado (login con email y contraseña de Supabase Auth).
+- Los formularios de la landing envían a `app/api/signups` y `app/api/feedback`; esas rutas guardan en Supabase con `SUPABASE_SECRET_KEY` (solo servidor, en `.env.local`).
+- Variables necesarias en `.env.local`: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`.

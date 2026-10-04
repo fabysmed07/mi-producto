@@ -1,1 +1,7 @@
 .env.local
+node_modules
+.next
+.vercel
+next-env.d.ts
+*.tsbuildinfo
+.claude/worktrees
