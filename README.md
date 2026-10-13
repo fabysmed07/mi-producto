@@ -24,6 +24,6 @@ npm install
 npm run dev
 ```
 
-- `/` es la landing y `/admin` el panel privado (login con email y contraseña de Supabase Auth).
+- `/` es la landing y `/admin` el panel privado. Cualquiera puede registrarse en `/registro` e iniciar sesión en `/login`; tras entrar llegan a `/cuenta`; a `/admin` solo entran los emails de `ADMIN_EMAILS`.
 - Los formularios de la landing envían a `app/api/signups` y `app/api/feedback`; esas rutas guardan en Supabase con `SUPABASE_SECRET_KEY` (solo servidor, en `.env.local`).
-- Variables necesarias en `.env.local`: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`.
+- Variables necesarias en `.env.local`: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `ADMIN_EMAILS` (separados por coma).

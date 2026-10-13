@@ -1,0 +1,30 @@
+import type { Metadata } from 'next';
+import { Fraunces, Work_Sans } from 'next/font/google';
+import '../(site)/globals.css';
+import './cuenta.css';
+
+const fraunces = Fraunces({
+  subsets: ['latin'],
+  axes: ['opsz'],
+  display: 'swap',
+  variable: '--font-fraunces',
+});
+const workSans = Work_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  display: 'swap',
+  variable: '--font-work-sans',
+});
+
+export const metadata: Metadata = {
+  title: 'Soltura · Mi cuenta',
+  robots: { index: false, follow: false },
+};
+
+export default function CuentaLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="es" className={`${fraunces.variable} ${workSans.variable}`}>
+      <body>{children}</body>
+    </html>
+  );
+}

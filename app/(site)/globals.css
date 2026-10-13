@@ -401,3 +401,7 @@ textarea{resize:vertical; min-height:96px; font-family:inherit;}
   .form-row input{max-width:none;}
 }
 
+
+.auth-nav{display:flex; gap:16px; align-items:center; margin-left:auto; font-size:14.5px; font-weight:500;}
+.auth-nav a, .auth-nav .auth-link{color:var(--ink-soft); text-decoration:none; background:none; border:0; padding:0; font:inherit; cursor:pointer;}
+.auth-nav a:hover, .auth-nav .auth-link:hover{color:var(--ink);}

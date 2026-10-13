@@ -1,8 +1,10 @@
+import AuthNav from '@/components/AuthNav';
 import CtaLink from '@/components/CtaLink';
 import FeedbackForm from '@/components/FeedbackForm';
 import RoutineWidget from '@/components/RoutineWidget';
 import { RoutineProvider } from '@/components/RoutineContext';
 import SignupForm from '@/components/SignupForm';
+import { getUser } from '@/lib/supabase-session';
 
 const BrandMark = () => (
   <span className="brand-mark" aria-hidden="true">
@@ -13,7 +15,8 @@ const BrandMark = () => (
   </span>
 );
 
-export default function Home() {
+export default async function Home() {
+  const user = await getUser();
   return (
     <RoutineProvider>
       <header className="nav">
@@ -23,6 +26,7 @@ export default function Home() {
             <a href="#por-que">Por qué seis minutos</a>
             <a href="#no-hace">Lo que no hace</a>
           </nav>
+          <AuthNav loggedIn={!!user} />
           <CtaLink className="btn" hideWhileHeroVisible>Empezar mi rutina</CtaLink>
         </div>
       </header>
