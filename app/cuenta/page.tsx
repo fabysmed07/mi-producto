@@ -14,7 +14,8 @@ export default async function CuentaPage() {
         <LogoutButton className="cuenta-logout" />
       </div>
       <div className="cuenta-card">
-        <p>Pronto vas a poder registrar acá tus rutinas de seis minutos: cuáles hiciste, cuándo y si las completaste.</p>
+        <p>Registra tus rutinas de seis minutos: cuáles hiciste, cuándo y si las completaste.</p>
+        <p><Link href="/cuenta/rutinas">Administra mis rutinas</Link></p>
         {isAdminEmail(user.email) && (
           <p><Link href="/admin">Ir al panel admin</Link></p>
         )}
