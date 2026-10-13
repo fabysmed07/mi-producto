@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import LogoutButton from '@/components/LogoutButton';
 
 type Signup = { email: string; created_at: string };
@@ -48,6 +49,7 @@ export default function AdminDashboard(props: Props) {
   return (
     <div className="wrap">
       <div id="dashboard-view">
+        <p className="back"><Link href="/cuenta">← Volver a mi cuenta</Link></p>
         <div className="topbar">
           <h1>Admin</h1>
           <LogoutButton className="secondary" />
