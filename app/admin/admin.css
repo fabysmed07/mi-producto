@@ -137,3 +137,20 @@
     font-size: 13px;
     font-weight: normal;
   }
+
+  /* Tips: formulario y lista */
+  .tip-form textarea,
+  .tip-form select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font: inherit;
+    font-size: 14px;
+  }
+  .tip-actions { display: flex; gap: 8px; margin-top: 16px; }
+  .tip-ok { color: var(--muted); font-size: 13px; margin-top: 12px; min-height: 16px; }
+  .tip-list { list-style: none; padding: 0; margin: 0; display: grid; gap: 12px; }
+  .tip-item { border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-size: 14px; }
+  .tip-item p { margin: 6px 0 0; }
+  .tip-item .tip-actions { margin-top: 10px; }
