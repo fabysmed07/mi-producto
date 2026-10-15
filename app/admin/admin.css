@@ -154,3 +154,19 @@
   .tip-item { border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; font-size: 14px; }
   .tip-item p { margin: 6px 0 0; }
   .tip-item .tip-actions { margin-top: 10px; }
+
+  /* Métricas */
+  .metric-cards { display: grid; gap: 20px; grid-template-columns: repeat(3, 1fr); margin-bottom: 20px; }
+  @media (max-width: 720px) { .metric-cards { grid-template-columns: 1fr; } }
+  .metric-label { font-size: 13px; color: var(--muted); }
+  .metric-value { font-size: 36px; font-weight: 600; margin: 6px 0; }
+  .metric-hint { font-size: 13px; color: var(--muted); }
+  .metric-chart { width: 100%; height: auto; display: block; margin: 8px 0; }
+  .metric-chart .grid { stroke: var(--border); stroke-width: 1; }
+  .metric-chart .axis { fill: var(--muted); font-size: 11px; }
+  .metric-chart .bar-new { fill: #9a9a94; }
+  .metric-chart .bar-active { fill: var(--accent); }
+  .legend { display: flex; gap: 16px; font-size: 13px; color: var(--muted); }
+  .dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; }
+  .dot-new { background: #9a9a94; }
+  .dot-active { background: var(--accent); }

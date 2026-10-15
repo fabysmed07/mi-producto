@@ -49,7 +49,7 @@ export default function AdminDashboard(props: Props) {
   return (
     <div className="wrap">
       <div id="dashboard-view">
-        <p className="back"><Link href="/cuenta">← Volver a mi cuenta</Link> · <Link href="/admin/tips">Gestionar tips</Link></p>
+        <p className="back"><Link href="/cuenta">← Volver a mi cuenta</Link> · <Link href="/admin/tips">Gestionar tips</Link> · <Link href="/admin/metricas">Métricas</Link></p>
         <div className="topbar">
           <h1>Admin</h1>
           <LogoutButton className="secondary" />

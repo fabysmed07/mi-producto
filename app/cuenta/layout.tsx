@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Fraunces, Work_Sans } from 'next/font/google';
+import { recordVisit } from '@/lib/visits';
 import '../(site)/globals.css';
 import './cuenta.css';
 
@@ -21,7 +22,8 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function CuentaLayout({ children }: { children: React.ReactNode }) {
+export default async function CuentaLayout({ children }: { children: React.ReactNode }) {
+  await recordVisit();
   return (
     <html lang="es" className={`${fraunces.variable} ${workSans.variable}`}>
       <body>{children}</body>

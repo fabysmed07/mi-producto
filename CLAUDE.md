@@ -50,3 +50,20 @@ Variables en `.env.local` (no versionado): `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUB
 - **Tips**: tabla `tips` global (migración `20261013…`, RLS: solo SELECT para `authenticated`; sin policies de escritura). Los usuarios leen con `getSupabaseSession()` en `app/api/tips` (GET) y `/cuenta/tips`. Solo el admin crea/edita/borra: `app/api/admin/tips` (POST) y `app/api/admin/tips/[id]` (PATCH/DELETE) verifican `isAdminEmail` y escriben con la llave secreta; la gestión vive en `/admin/tips` (`components/AdminTipForm.tsx`). Zonas/complejidad/validación en `lib/tips.ts` (zonas = `lib/routines.ts`).
 - **Widget de rutina**: `RoutineWidget` (reloj/ejercicios) se registra en `RoutineProvider` (`components/RoutineContext.tsx`) con `register(fn)`; los CTA (`CtaLink`: menú, hero, cierre) llaman `start()` del contexto para subir al widget y arrancar la rutina sin acoplarse entre sí.
 - Alias de imports: `@/` apunta a la raíz del repo.
+
+## Métricas
+
+Página `/admin/metricas` (`app/admin/metricas/page.tsx`, solo `ADMIN_EMAILS`). Lee en el servidor con la llave secreta: usuarios de Auth, `routine_sessions` y `visits`. Todos los días y semanas son UTC (semanas de lunes a domingo). Los admins cuentan como cualquier usuario.
+
+| Métrica | Pregunta que responde | Cómo se calcula |
+|---|---|---|
+| Usuarios registrados | ¿Cuánta gente llegó? | Total de usuarios de Auth. |
+| Activación | ¿Quienes se registran llegan a usar la rutina? | Usuarios con al menos una fila en `routine_sessions` ÷ usuarios registrados. |
+| Retorno | ¿La gente vuelve a la app en días distintos? | Usuarios con al menos 2 valores distintos de `day` en `visits` ÷ usuarios registrados. |
+| Finalización | ¿Los 6 minutos se completan o se abandonan? | Sesiones con `completado = true` ÷ sesiones totales. |
+| Finalización por rutina | ¿Hay rutinas que se abandonan más que otras? | Lo mismo que Finalización, agrupado por `rutina`; tabla con las seis de `lib/routines.ts`. |
+| Regreso con rutina completada | ¿Regresan día con día a hacer la rutina, no solo a abrir la app? | Usuarios con `completado = true` en al menos 2 días distintos (`created_at`) ÷ usuarios con al menos una sesión. |
+| Gráfico semanal (últimas 8 semanas) | ¿Crece la base y vuelve la gente? | Usuarios nuevos por `created_at` y usuarios distintos con al menos una visita en la semana. |
+
+- **Visitas**: tabla `visits` (una fila por usuario y día, `unique (user_id, day)`, RLS: cada usuario registra y lee solo las suyas). `recordVisit()` en `lib/visits.ts` se llama desde `app/cuenta/layout.tsx` con la llave pública y la sesión del usuario; un fallo nunca rompe la página. Solo hay datos desde que existe la tabla.
+- **Límites**: `completado` lo marca el usuario a mano, así que la finalización mide lo declarado. No se guarda duración ni punto de abandono. Con menos de 10 sesiones la página avisa de muestra pequeña.
