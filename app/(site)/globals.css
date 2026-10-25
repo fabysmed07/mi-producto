@@ -82,7 +82,7 @@
   }
   .nav-inner{
     max-width:1080px; margin:0 auto; padding:18px 32px;
-    display:flex; align-items:center; justify-content:space-between;
+    display:flex; align-items:center; justify-content:space-between; gap:28px;
   }
   .brand{display:flex; align-items:center; gap:10px; font-family:var(--font-fraunces); font-weight:600; font-size:21px;}
   .brand-mark{
@@ -91,7 +91,7 @@
     display:inline-flex; align-items:center; justify-content:center; flex:none;
   }
   .brand-mark svg{width:22px; height:22px; display:block;}
-  nav.links{display:flex; gap:28px; font-size:14.5px; color:var(--ink-soft); font-weight:500;}
+  nav.links{display:flex; gap:28px; margin-right:auto; font-size:14.5px; color:var(--ink-soft); font-weight:500;}
   nav.links a{text-decoration:none;}
   nav.links a:hover{color:var(--ink);}
   .btn{
@@ -102,9 +102,16 @@
     font-family:var(--font-work-sans);
   }
   section.essay{scroll-margin-top:72px;}
-  @media (max-width:760px){
+  .brand{flex:none;}
+  /* Fraunces tiene la línea base más baja que Work Sans: se bajan los enlaces para que compartan baseline con "Soltura". */
+  @media (min-width:901px){
+    nav.links, .auth-nav{position:relative; top:3px;}
+  }
+  .nav .btn{flex:none; white-space:nowrap;}
+  @media (max-width:900px){
     .nav-inner{flex-wrap:wrap; row-gap:10px;}
-    nav.links{order:3; flex:0 0 100%; gap:20px; font-size:14px; overflow-x:auto; white-space:nowrap; padding-bottom:2px;}
+    nav.links{order:3; flex:0 0 100%; margin-right:0; gap:20px; font-size:14px; overflow-x:auto; white-space:nowrap; padding-bottom:2px;}
+    .nav .btn.is-hidden{display:none;}
     section.essay{scroll-margin-top:110px;}
   }
 

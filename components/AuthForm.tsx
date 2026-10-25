@@ -51,6 +51,7 @@ export default function AuthForm({ mode, next }: { mode: 'login' | 'registro'; n
 
   return (
     <div className="wrap">
+      <p id="login-back"><Link href="/">← Volver al inicio</Link></p>
       <div id="login-view" className="panel">
         <h1>{isLogin ? 'Iniciar sesión' : 'Crear cuenta'}</h1>
         <form id="login-form" onSubmit={onSubmit}>

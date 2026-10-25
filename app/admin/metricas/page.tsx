@@ -1,6 +1,4 @@
-import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import LogoutButton from '@/components/LogoutButton';
 import { ROUTINES } from '@/lib/routines';
 import { getSupabaseAdmin } from '@/lib/supabase-server';
 import { getUser, isAdminEmail } from '@/lib/supabase-session';
@@ -45,8 +43,7 @@ export default async function MetricasPage() {
   if (failed) {
     return (
       <div className="wrap">
-        <p className="back"><Link href="/admin">← Volver al panel admin</Link></p>
-        <div className="topbar"><h1>Métricas</h1><LogoutButton className="secondary" /></div>
+        <div className="topbar"><h1>Métricas</h1></div>
         <div className="panel"><div className="loading">No se pudieron cargar las métricas. Probá recargar la página.</div></div>
       </div>
     );
@@ -118,11 +115,7 @@ export default async function MetricasPage() {
 
   return (
     <div className="wrap">
-      <p className="back"><Link href="/admin">← Volver al panel admin</Link></p>
-      <div className="topbar">
-        <h1>Métricas</h1>
-        <LogoutButton className="secondary" />
-      </div>
+      <div className="topbar"><h1>Métricas</h1></div>
 
       <div className="metric-cards">
         {cards.map((c) => (
@@ -138,11 +131,11 @@ export default async function MetricasPage() {
         <div className="section-header">
           <h2>Finalización por rutina</h2>
         </div>
-        <table>
+        <table className="stack">
           <thead><tr><th>Rutina</th><th>Sesiones</th><th>Completadas</th><th>Finalización</th></tr></thead>
           <tbody>
             {routineRows.map((r) => (
-              <tr key={r.label}><td>{r.label}</td><td>{r.total}</td><td>{r.done}</td><td>{pct(r.done, r.total)}</td></tr>
+              <tr key={r.label}><td data-label="Rutina">{r.label}</td><td data-label="Sesiones">{r.total}</td><td data-label="Completadas">{r.done}</td><td data-label="Finalización">{pct(r.done, r.total)}</td></tr>
             ))}
           </tbody>
         </table>

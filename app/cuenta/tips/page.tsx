@@ -1,6 +1,4 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import LogoutButton from '@/components/LogoutButton';
 import TipList from '@/components/TipList';
 import { getSupabaseSession, getUser } from '@/lib/supabase-session';
 import { TIP_COLUMNS, type Tip } from '@/lib/tips';
@@ -18,13 +16,9 @@ export default async function TipsPage() {
     .limit(100);
 
   return (
-    <main className="cuenta">
-      <div className="cuenta-top">
-        <h1>Tips</h1>
-        <LogoutButton className="cuenta-logout" />
-      </div>
-      <p className="cuenta-back"><Link href="/cuenta">← Volver a mi cuenta</Link></p>
-      <div className="cuenta-card cuenta-sessions">
+    <main className="wrap">
+      <div className="topbar"><h1>Tips</h1></div>
+      <div className="panel cuenta-card cuenta-sessions">
         {error ? (
           <p className="session-empty">No se pudieron cargar los tips. Recarga la página.</p>
         ) : (

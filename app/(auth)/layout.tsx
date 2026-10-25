@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
-import '../admin/admin.css';
+import { fontVariables } from '@/lib/fonts';
+import '../shell.css';
 
 export const metadata: Metadata = {
   title: 'Soltura · Cuenta',
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="es">
+    <html lang="es" className={fontVariables}>
       <body>{children}</body>
     </html>
   );

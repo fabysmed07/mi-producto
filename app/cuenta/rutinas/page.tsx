@@ -1,6 +1,4 @@
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import LogoutButton from '@/components/LogoutButton';
 import SessionForm from '@/components/SessionForm';
 import SessionList from '@/components/SessionList';
 import type { RoutineSession } from '@/lib/routines';
@@ -20,17 +18,13 @@ export default async function RutinasPage() {
   const sessions = (data ?? []) as RoutineSession[];
 
   return (
-    <main className="cuenta">
-      <div className="cuenta-top">
-        <h1>Mis rutinas</h1>
-        <LogoutButton className="cuenta-logout" />
-      </div>
-      <p className="cuenta-back"><Link href="/cuenta">← Volver a mi cuenta</Link></p>
-      <div className="cuenta-card">
+    <main className="wrap">
+      <div className="topbar"><h1>Mis rutinas</h1></div>
+      <div className="panel cuenta-card">
         <h2>Registrar una rutina</h2>
         <SessionForm />
       </div>
-      <div className="cuenta-card cuenta-sessions">
+      <div className="panel cuenta-card cuenta-sessions">
         <h2>Mis sesiones</h2>
         {error ? (
           <p className="session-empty">No se pudieron cargar tus sesiones. Recarga la página.</p>
