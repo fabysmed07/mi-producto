@@ -1,0 +1,4 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "next build && if [ \"$VERCEL_ENV\" = \"production\" ]; then test -n \"$POSTGRES_URL_NON_POOLING\" && supabase db push --db-url \"$POSTGRES_URL_NON_POOLING\"; fi"
+}
