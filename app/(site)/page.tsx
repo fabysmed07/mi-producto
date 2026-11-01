@@ -76,7 +76,7 @@ export default async function Home() {
 
       <section className="final-cta">
         <div className="wrap">
-          <h2>Seis minutos cada vez que los necesites. Empieza cuando quieras.</h2>
+          <h2>Seis minutos cada vez que lo necesites. Empieza cuando quieras.</h2>
           <p>Sin tapete, sin ropa deportiva, sin ceremonia.</p>
           <div className="hero-cta">
             <CtaLink className="btn">Empezar mi rutina</CtaLink>

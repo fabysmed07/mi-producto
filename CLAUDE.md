@@ -27,6 +27,7 @@ admin ve todas las sesiones, rutinas mas usadas, tasa de abandono
 - Nunca abras nuevos branches a menos que el usuario lo pida
 - Usa la información de .env.local para la migración.
 - Migraciones: la base de desarrollo (la de `.env.local`) la migras tú desde aquí. La de producción nunca: la migra Vercel en cada deploy de producción (`vercel.json`: `next build` y, solo si `VERCEL_ENV=production`, `supabase db push --db-url "$POSTGRES_URL_NON_POOLING"`). Si el build o una migración fallan, el deploy falla; en preview no se migra nada. Nunca corras `db push` ni SQL contra producción.
+- Producción: la URL es https://mi-producto-two.vercel.app/ y su base es `sup-mi-producto-prod`. Nunca se desarrolla, se prueba ni se crean datos contra ella. Las migraciones a producción las aplica Vercel en cada deploy; nunca apliques migraciones ni cambies datos en la base de producción.
 
 ## Comandos
 
