@@ -89,6 +89,17 @@
     font: inherit;
     font-size: 14px;
   }
+  /* Flecha del select propia, con el mismo margen derecho (12 px) que el icono del calendario */
+  .field select,
+  .tip-form select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 40px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none' stroke='%231f1f1f' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 6l5 5 5-5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px 16px;
+  }
   /* Móvil: letra de 16 px (iOS no hace zoom al enfocar) y área táctil de al menos 44 px. */
   @media (max-width: 760px) {
     input[type="email"],
