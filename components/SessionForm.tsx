@@ -30,7 +30,8 @@ export default function SessionForm() {
         window.location.assign('/login?next=/cuenta');
         return;
       }
-      if (!res.ok) setMsg({ text: 'No se pudo guardar. Intenta de nuevo.', kind: 'error' });
+      if (res.status === 400) setMsg({ text: 'Revisa los datos: el peso debe estar entre 20 y 300 kg, con un decimal como máximo.', kind: 'error' });
+      else if (!res.ok) setMsg({ text: 'No se pudo guardar. Intenta de nuevo.', kind: 'error' });
       else {
         form.reset();
         setMsg({ text: 'Sesión registrada.', kind: 'success' });

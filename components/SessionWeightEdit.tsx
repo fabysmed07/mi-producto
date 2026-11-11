@@ -9,12 +9,12 @@ export default function SessionWeightEdit({ id, peso }: { id: string; peso: numb
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const value = String(new FormData(e.currentTarget).get('peso') ?? '').trim();
-    setError(false);
+    setError(null);
     setBusy(true);
     try {
       const res = await fetch(`/api/sessions/${id}`, {
@@ -26,12 +26,16 @@ export default function SessionWeightEdit({ id, peso }: { id: string; peso: numb
         window.location.assign('/login?next=/cuenta/rutinas');
         return;
       }
-      if (res.ok || res.status === 404) {
+      if (res.ok) {
         setEditing(false);
         router.refresh();
-      } else setError(true);
+      } else if (res.status === 404) {
+        setError('Esa sesión ya no existe. Recarga la página.');
+      } else if (res.status === 400) {
+        setError('Revisa que el peso sea entre 20 y 300 kg, con un decimal como máximo.');
+      } else setError('No se pudo guardar. Intenta de nuevo.');
     } catch {
-      setError(true);
+      setError('No se pudo guardar. Intenta de nuevo.');
     }
     setBusy(false);
   }
@@ -55,9 +59,9 @@ export default function SessionWeightEdit({ id, peso }: { id: string; peso: numb
       </div>
       <div className="session-row">
         <button type="submit" className="btn" disabled={busy}>{busy ? 'Guardando…' : 'Guardar'}</button>
-        <button type="button" className="secondary" onClick={() => { setEditing(false); setError(false); }} disabled={busy}>Cancelar</button>
+        <button type="button" className="secondary" onClick={() => { setEditing(false); setError(null); }} disabled={busy}>Cancelar</button>
       </div>
-      {error && <p className="form-msg is-error" role="alert">No se pudo guardar. Revisa que sea entre 20 y 300 kg.</p>}
+      {error && <p className="form-msg is-error" role="alert">{error}</p>}
     </form>
   );
 }

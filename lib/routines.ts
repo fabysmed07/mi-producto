@@ -32,7 +32,7 @@ export function parsePeso(value: unknown): number | null | 'invalid' {
   if (typeof value === 'string') {
     const text = value.trim().replace(',', '.');
     if (text === '') return null;
-    if (!/^\d+(\.\d)?$/.test(text)) return 'invalid';
+    if (!/^(0|[1-9]\d*)(\.\d)?$/.test(text)) return 'invalid';
     value = Number(text);
   }
   if (typeof value !== 'number' || !Number.isFinite(value)) return 'invalid';

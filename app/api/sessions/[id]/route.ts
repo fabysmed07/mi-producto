@@ -13,7 +13,11 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
   if (!UUID.test(id)) return NextResponse.json({ error: 'invalid' }, { status: 400 });
 
   const body = await request.json().catch(() => null);
-  const peso = parsePeso(body?.peso);
+  // Quitar el peso es explícito ("" o null); un cuerpo sin `peso` o roto no borra nada.
+  if (!body || typeof body !== 'object' || !('peso' in body)) {
+    return NextResponse.json({ error: 'invalid' }, { status: 400 });
+  }
+  const peso = parsePeso(body.peso);
   if (peso === 'invalid') return NextResponse.json({ error: 'invalid' }, { status: 400 });
 
   const supabase = await getSupabaseSession();
