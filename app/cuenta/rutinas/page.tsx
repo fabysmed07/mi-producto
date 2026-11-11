@@ -12,7 +12,7 @@ export default async function RutinasPage() {
   const supabase = await getSupabaseSession();
   const { data, error } = await supabase
     .from('routine_sessions')
-    .select('id,rutina,completado,nota,created_at')
+    .select('id,rutina,completado,nota,peso,created_at')
     .order('created_at', { ascending: false })
     .limit(50);
   const sessions = (data ?? []) as RoutineSession[];

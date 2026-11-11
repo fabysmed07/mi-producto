@@ -13,6 +13,7 @@ const TABS = [
   { href: '/admin/metricas', label: 'Métricas' },
   { href: '/admin/metas', label: 'Metas' },
   { href: '/admin/rutinas', label: 'Rutinas' },
+  { href: '/admin/sesiones', label: 'Sesiones' },
   { href: '/admin/tips', label: 'Tips' },
 ];
 

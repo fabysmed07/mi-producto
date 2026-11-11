@@ -23,6 +23,7 @@ export default function SessionForm() {
           rutina: fd.get('rutina'),
           completado: fd.get('completado') === 'si',
           nota: String(fd.get('nota') ?? '').trim(),
+          peso: String(fd.get('peso') ?? '').trim(),
         }),
       });
       if (res.status === 401) {
@@ -60,6 +61,10 @@ export default function SessionForm() {
       <div className="field">
         <label htmlFor="session-nota">Nota (opcional)</label>
         <textarea id="session-nota" name="nota" rows={3} maxLength={280} placeholder="Hoy me dolía la lumbar"></textarea>
+      </div>
+      <div className="field">
+        <label htmlFor="session-peso">Peso en kg (opcional)</label>
+        <input id="session-peso" name="peso" type="number" inputMode="decimal" min={20} max={300} step={0.1} placeholder="72.5" />
       </div>
       <button type="submit" className="btn" disabled={busy}>{busy ? 'Guardando…' : 'Registrar rutina'}</button>
       <p className={msg ? `form-msg is-${msg.kind}` : 'form-msg'} role="status" aria-live="polite">{msg?.text}</p>

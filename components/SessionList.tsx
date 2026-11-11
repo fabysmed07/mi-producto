@@ -1,3 +1,4 @@
+import SessionWeightEdit from '@/components/SessionWeightEdit';
 import { routineLabel, type RoutineSession } from '@/lib/routines';
 
 export default function SessionList({ sessions }: { sessions: RoutineSession[] }) {
@@ -18,6 +19,7 @@ export default function SessionList({ sessions }: { sessions: RoutineSession[] }
             {new Date(s.created_at).toLocaleString('es', { dateStyle: 'medium', timeStyle: 'short' })}
           </time>
           {s.nota && <p className="session-note">{s.nota}</p>}
+          <SessionWeightEdit id={s.id} peso={s.peso} />
         </li>
       ))}
     </ul>
