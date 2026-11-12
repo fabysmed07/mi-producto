@@ -20,5 +20,8 @@
 .session-badge.is-done{color:var(--moss); border-color:var(--moss);}
 .session-note{margin-top:8px; font-size:14px;}
 .session-empty{color:var(--ink-soft);}
+.session-weight{margin-top:10px; font-size:14px; color:var(--ink-soft);}
+.session-weight-form{display:grid; gap:10px;}
+.session-weight-form .session-row{justify-content:flex-start;}
 .cuenta-card .form-stack{margin-top:8px;}
 .session-radios label{margin:0; font-weight:500; color:var(--ink);}

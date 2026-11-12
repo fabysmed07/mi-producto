@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseSession, getUser } from '@/lib/supabase-session';
-import { isRoutine } from '@/lib/routines';
+import { isRoutine, parsePeso } from '@/lib/routines';
 
-const COLUMNS = 'id,rutina,completado,nota,created_at';
+const COLUMNS = 'id,rutina,completado,nota,peso,created_at';
 
 // Usa la llave pública y la sesión del usuario: RLS limita todo a sus propias filas.
 export async function GET() {
@@ -26,7 +26,8 @@ export async function POST(request: Request) {
 
   const body = await request.json().catch(() => null);
   const nota = typeof body?.nota === 'string' ? body.nota.trim() : '';
-  if (!isRoutine(body?.rutina) || typeof body?.completado !== 'boolean' || nota.length > 280) {
+  const peso = parsePeso(body?.peso);
+  if (!isRoutine(body?.rutina) || typeof body?.completado !== 'boolean' || nota.length > 280 || peso === 'invalid') {
     return NextResponse.json({ error: 'invalid' }, { status: 400 });
   }
 
@@ -34,7 +35,7 @@ export async function POST(request: Request) {
   const supabase = await getSupabaseSession();
   const { error } = await supabase
     .from('routine_sessions')
-    .insert({ rutina: body.rutina, completado: body.completado, nota: nota || null });
+    .insert({ rutina: body.rutina, completado: body.completado, nota: nota || null, peso });
   if (error) {
     console.error('sessions insert failed:', error.code);
     return NextResponse.json({ error: 'server' }, { status: 500 });

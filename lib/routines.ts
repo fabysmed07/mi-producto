@@ -21,5 +21,23 @@ export type RoutineSession = {
   rutina: string;
   completado: boolean;
   nota: string | null;
+  peso: number | null;
   created_at: string;
 };
+
+// Peso en kg, opcional: entre 20 y 300 con hasta un decimal (debe coincidir con el check de la tabla).
+// Vacío o null → null (sin dato); algo que no cumple → 'invalid'.
+export function parsePeso(value: unknown): number | null | 'invalid' {
+  if (value === null || value === undefined) return null;
+  if (typeof value === 'string') {
+    const text = value.trim().replace(',', '.');
+    if (text === '') return null;
+    if (!/^(0|[1-9]\d*)(\.\d)?$/.test(text)) return 'invalid';
+    value = Number(text);
+  }
+  if (typeof value !== 'number' || !Number.isFinite(value)) return 'invalid';
+  if (value < 20 || value > 300 || Math.round(value * 10) / 10 !== value) return 'invalid';
+  return value;
+}
+
+export const formatPeso = (peso: number) => `${peso.toLocaleString('es', { maximumFractionDigits: 1 })} kg`;
