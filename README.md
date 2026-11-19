@@ -15,6 +15,37 @@ Qué no entendió:No sé si esto es una app que me descargo, una página web que
 Qué preguntó: ¿Esto es una app o una página que abro cada día? ¿Tengo que crear cuenta? ¿Cuánto cuesta / es gratis? ¿Sirve si ya tengo una lesión leve o dolor de espalda, o de plano no debería tocar eso?
 
 
+## Cómo levantar el proyecto
+
+Antes de empezar: Node.js con npm (probado con Node 24 y npm 11; la versión mínima **sin confirmar**, el proyecto no la fija) y Git.
+
+1. Clona el repositorio y entra a la carpeta:
+   ```bash
+   git clone https://github.com/fabysmed07/mi-producto
+   cd mi-producto
+   ```
+2. Instala las dependencias:
+   ```bash
+   npm install
+   ```
+3. Crea tu `.env.local` a partir de la plantilla:
+   ```bash
+   cp .env.example .env.local
+   ```
+   En PowerShell: `Copy-Item .env.example .env.local`.
+4. Llena los valores de `.env.local`. **Pídeselos al dueño del proyecto**, y que sean los de la base de **desarrollo**: nunca uses los de producción (`CLAUDE.md` prohíbe desarrollar o probar contra ella). `.env.example` explica para qué sirve cada variable. `.env.local` no se sube a git; no lo compartas por chat ni lo pegues en issues o pull requests.
+5. Levanta la app:
+   ```bash
+   npm run dev
+   ```
+   Se abre en http://localhost:3000.
+6. Comprobación opcional de tipos (no hay tests ni ESLint; `lint` ejecuta `tsc --noEmit`):
+   ```bash
+   npm run lint
+   ```
+
+Para entender el proyecto, empieza por [docs/mapa-del-producto.md](docs/mapa-del-producto.md). Las reglas de trabajo (ramas, pull requests, migraciones) están en `CLAUDE.md`.
+
 ## Desarrollo
 
 Next.js (App Router) + TypeScript.
