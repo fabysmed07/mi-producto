@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation';
 import { ROUTINES } from '@/lib/routines';
+import { computeStreakSignal, MIN_ELIGIBLE, type StreakSignal } from '@/lib/streak-signal';
 import { getSupabaseAdmin } from '@/lib/supabase-server';
 import { getUser, isAdminEmail } from '@/lib/supabase-session';
 
@@ -33,10 +34,11 @@ export default async function MetricasPage() {
   if (!isAdminEmail(user?.email)) notFound();
 
   const admin = getSupabaseAdmin();
-  const [users, sessionsRes, visitsRes] = await Promise.all([
+  const [users, sessionsRes, visitsRes, flagRes] = await Promise.all([
     listAllUsers(),
     admin.from('routine_sessions').select('user_id, rutina, completado, created_at'),
     admin.from('visits').select('user_id, day'),
+    admin.from('feature_flags').select('enabled, enabled_at').eq('key', 'contador_racha').maybeSingle(),
   ]);
 
   const failed = !users || sessionsRes.error || visitsRes.error;
@@ -105,6 +107,21 @@ export default async function MetricasPage() {
   const bar = Math.min(26, group / 2 - 4);
   const y = (n: number) => padT + plotH - (n / max) * plotH;
 
+  // Señal de la hipótesis del contador de racha: solo desde la última vez que se encendió el interruptor.
+  const enabledAtRaw = flagRes.error ? null : (flagRes.data?.enabled_at as string | null | undefined) ?? null;
+  const signal = enabledAtRaw
+    ? computeStreakSignal(
+        sessions.map((s) => ({ user_id: s.user_id as string, completado: s.completado === true, created_at: s.created_at as string })),
+        new Date(enabledAtRaw),
+      )
+    : null;
+  const verdictText: Record<StreakSignal['verdict'], string> = {
+    inconclusive: `Inconcluso: menos de ${MIN_ELIGIBLE} usuarios elegibles (extender la ventana).`,
+    advance: 'Se sostiene: avanzar a la hipótesis de insignias.',
+    iterate: 'Zona intermedia: iterar la presentación y repetir 14 días.',
+    stop: 'No se sostiene: detener, no construir insignias sobre el contador.',
+  };
+
   const cards = [
     { label: 'Usuarios registrados', value: String(total), hint: 'Cuentas creadas en total.' },
     { label: 'Activación', value: pct(activatedCount, total), hint: `${activatedCount} de ${total} crearon al menos un registro de rutina.` },
@@ -125,6 +142,43 @@ export default async function MetricasPage() {
             <div className="metric-hint">{c.hint}</div>
           </div>
         ))}
+      </div>
+
+      <div className="panel" style={{ marginBottom: 20 }}>
+        <div className="section-header">
+          <h2>Contador de racha</h2>
+        </div>
+        {flagRes.error ? (
+          <p className="metric-hint">No se pudo leer el interruptor. Recarga la página.</p>
+        ) : !signal ? (
+          <p className="metric-hint">El interruptor aún no se enciende: no hay datos del contador.</p>
+        ) : (
+          <>
+            <div className="metric-cards">
+              <div className="panel">
+                <div className="metric-label">Usuarios que mejoran</div>
+                <div className="metric-value">{pct(signal.improved, signal.eligible)}</div>
+                <div className="metric-hint">{signal.improved} de {signal.eligible} elegibles completaron rutina en al menos un día más que antes.</div>
+              </div>
+              <div className="panel">
+                <div className="metric-label">Días con rutina completada</div>
+                <div className="metric-value">{signal.avgBefore.toFixed(1)} → {signal.avgAfter.toFixed(1)}</div>
+                <div className="metric-hint">Promedio por usuario elegible: {signal.elapsedDays} días antes → {signal.elapsedDays} días con el contador.</div>
+              </div>
+              <div className="panel">
+                <div className="metric-label">Ventana</div>
+                <div className="metric-value">{signal.elapsedDays} de 14 días</div>
+                <div className="metric-hint">Desde {new Date(enabledAtRaw as string).toISOString().slice(0, 10)} (UTC). {signal.ongoing ? 'En curso: lectura provisional.' : 'Ventana completa.'}</div>
+              </div>
+            </div>
+            <p className="metric-hint">
+              {verdictText[signal.verdict]}{signal.ongoing && signal.verdict !== 'inconclusive' ? ' (provisional)' : ''}
+            </p>
+          </>
+        )}
+        <p className="metric-hint">
+          Elegibles: usuarios con al menos una rutina completada en los 14 días previos a encender el interruptor. Mejoran si suman al menos un día más con rutina completada. Umbrales fijados de antemano en <code>product/hypotheses/contador-dias-seguidos.md</code>. Si se apaga y se vuelve a encender, la medición empieza en la nueva fecha. El contador se mide sobre lo declarado (<code>completado</code>) y sin grupo de control.
+        </p>
       </div>
 
       <div className="panel" style={{ marginBottom: 20 }}>

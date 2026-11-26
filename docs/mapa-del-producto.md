@@ -20,12 +20,13 @@ Guía para quien llega nuevo al proyecto. Cada afirmación lleva entre paréntes
 Cada persona, desde `/cuenta`, puede:
 - Anotar **a mano** cada rutina que hizo: qué zona (cuello, espalda baja, cadera, hombros, muñecas, cuerpo completo), si la completó o la dejó a medias, una nota opcional y un peso opcional (`components/SessionForm.tsx:47-71`, `lib/routines.ts:2-9`).
 - Fijar una meta semanal de 1 a 7 días (`lib/goals.ts:8`, `app/api/goals/route.ts:28-33`).
-- Ver el avance de esa meta y leer los consejos ("tips") que publica el equipo (`app/cuenta/page.tsx:56-92`).
+- Ver el avance de esa meta y leer los consejos ("tips") que publica el equipo (`app/cuenta/page.tsx:69-117`).
 - Cada usuario ve solo lo suyo (`app/cuenta/rutinas/page.tsx:11`, comentario en `app/api/sessions/route.ts:7`).
 
 **c) Un panel de administración** solo para los emails de `ADMIN_EMAILS`, con:
-- Resumen, signups, feedback, métricas, metas, rutinas, sesiones y tips (`app/admin/layout.tsx:9-18`).
-- Las métricas buscan responder si la gente se activa, vuelve y termina la rutina (`app/admin/metricas/page.tsx:108-114`).
+- Resumen, signups, feedback, métricas, metas, rutinas, sesiones, tips e interruptores (`app/admin/layout.tsx:9-19`).
+- Las métricas buscan responder si la gente se activa, vuelve y termina la rutina (`app/admin/metricas/page.tsx:125-131`).
+- Un interruptor para encender y apagar el contador de días seguidos (ver "Contador de racha" más abajo).
 
 **Cosas que conviene saber desde el día uno**
 - **El cronómetro no guarda nada.** `RoutineWidget` no hace ninguna llamada a la API (se leyó el archivo completo: `components/RoutineWidget.tsx`). Registrar una rutina es una acción aparte, manual, en `/cuenta/rutinas`.
@@ -44,12 +45,13 @@ Stack: Next.js 15 (App Router), React 19, TypeScript, Supabase (`package.json:11
 |---|---|---|
 | Landing `/` | Página pública: cronómetro, ensayo "por qué seis minutos", lista de espera, opiniones | `app/(site)/page.tsx` (estilos: `app/(site)/globals.css`) |
 | `/login` y `/registro` | Pantallas de acceso; ambas usan el mismo formulario | `app/(auth)/login/page.tsx`, `app/(auth)/registro/page.tsx`, `components/AuthForm.tsx` |
-| `/cuenta` | Tablero con tres tarjetas: rutinas de la semana, meta semanal, último tip | `app/cuenta/page.tsx:56-92` |
+| `/cuenta` | Tablero con tres tarjetas: rutinas de la semana, meta semanal, último tip | `app/cuenta/page.tsx:69-117` |
 | `/cuenta/rutinas` | Formulario para registrar una sesión + lista de las 50 últimas | `app/cuenta/rutinas/page.tsx` |
 | `/cuenta/meta` | Meta semanal, su progreso y el historial de metas | `app/cuenta/meta/page.tsx` |
 | `/cuenta/tips` | Lista de tips | `app/cuenta/tips/page.tsx`, `components/TipList.tsx` |
 | `/cuenta/sin-acceso` | Aviso cuando alguien sin permiso entra a `/admin` | `app/cuenta/sin-acceso/page.tsx`, `middleware.ts:38-46` |
-| `/admin/*` | Panel: Resumen, Signups, Feedback, Métricas, Metas, Rutinas, Sesiones, Tips | `app/admin/layout.tsx:9-18`, una carpeta por pestaña en `app/admin/` |
+| `/admin/interruptores` | Enciende/apaga features y muestra la última vez que se encendieron | `app/admin/interruptores/page.tsx`, `components/AdminFlagToggle.tsx` |
+| `/admin/*` | Panel: Resumen, Signups, Feedback, Métricas, Metas, Rutinas, Sesiones, Tips, Interruptores | `app/admin/layout.tsx:9-19`, una carpeta por pestaña en `app/admin/` |
 
 ### Rutas de API (`app/api/`)
 El navegador solo habla con estas rutas, nunca con Supabase directamente (no hay cliente de Supabase en los componentes `'use client'` revisados: `components/AuthForm.tsx`, `components/SessionForm.tsx`; el resto de componentes cliente **sin confirmar** uno por uno).
@@ -66,6 +68,7 @@ El navegador solo habla con estas rutas, nunca con Supabase directamente (no hay
 | `POST /api/signups` | Guarda un email en la lista de espera (pública) | **secreta** | `app/api/signups/route.ts:13` |
 | `POST /api/feedback` | Guarda una opinión (pública) | **secreta** | `app/api/feedback/route.ts:12-14` |
 | `POST /api/admin/tips`, `/api/admin/tips/[id]` | Crear, editar y borrar tips (solo admin) | **secreta** | `app/api/admin/tips/route.ts:7-21` |
+| `PATCH /api/admin/flags/[key]` | Enciende o apaga un interruptor (solo admin) | **secreta** | `app/api/admin/flags/[key]/route.ts:9-31` |
 
 ### Acceso y permisos
 - **`middleware.ts`**: refresca la sesión; sin sesión manda `/admin` y `/cuenta` a `/login?next=…` (`middleware.ts:35-37`); con sesión pero sin ser admin, muestra el aviso 403 (`middleware.ts:39-46`); con sesión, saca a quien visita `/login` o `/registro` hacia `/cuenta` (`middleware.ts:47-49`).
@@ -78,9 +81,12 @@ El navegador solo habla con estas rutas, nunca con Supabase directamente (no hay
 - `lib/goals.ts`: reglas de las metas (días 1-7, rango de fechas, tope de 50) (`lib/goals.ts:8-45`).
 - `lib/tips.ts`: complejidad, límite de 280 caracteres y validación de un tip (`lib/tips.ts:4-46`).
 - `lib/visits.ts`: registra una visita por usuario y día; un fallo nunca rompe la página (`lib/visits.ts:6-17`).
+- `lib/feature-flags.ts`: claves de interruptores y `getFlag()`, que lee el estado en cada visita con la llave pública y la sesión; si falla, la feature queda apagada (`lib/feature-flags.ts:4-22`).
+- `lib/streak.ts`: días seguidos (UTC) con rutina completada, terminando hoy o ayer (`lib/streak.ts:7-17`).
+- `lib/streak-signal.ts`: señal de la hipótesis del contador, solo desde que se encendió (`lib/streak-signal.ts:22-67`).
 
 ### Base de datos (`supabase/migrations/`)
-Tablas con RLS: `signups` y `feedback` (`20260927120000_…`), `routine_sessions` (`20261012120000_…`), `tips` (`20261013120000_…`), `visits` (`20261015120000_…`), `weekly_goals` (`20261022120000_…`, con ajustes en `20261024120000_…` y `20261024130000_…`). El peso se añadió después (`20261105120000_add_peso_to_routine_sessions.sql:5`). Las políticas públicas de INSERT de `signups`/`feedback` se retiran en `20261003120000_…` y el SELECT de usuarios autenticados en `20261008120000_…` (solo por los nombres de los archivos; **su contenido sin confirmar**, no se leyó).
+Tablas con RLS: `signups` y `feedback` (`20260927120000_…`), `routine_sessions` (`20261012120000_…`), `tips` (`20261013120000_…`), `visits` (`20261015120000_…`), `weekly_goals` (`20261022120000_…`, con ajustes en `20261024120000_…` y `20261024130000_…`). `feature_flags` (`20261125120000_create_feature_flags.sql`): una fila por interruptor, apagada por defecto; `enabled_at` guarda la última vez que se encendió (lo fija un trigger); usuarios con sesión pueden leerla y solo la llave secreta escribe. El peso se añadió después (`20261105120000_add_peso_to_routine_sessions.sql:5`). Las políticas públicas de INSERT de `signups`/`feedback` se retiran en `20261003120000_…` y el SELECT de usuarios autenticados en `20261008120000_…` (solo por los nombres de los archivos; **su contenido sin confirmar**, no se leyó).
 
 ### Otros
 - `components/`: formularios y listas (`SessionForm`, `SessionList`, `SessionWeightEdit`, `GoalForm`, `GoalList`, `GoalDeleteButton`, `AdminTipForm`, `AdminSignups`, `AdminFeedback`, `SignupForm`, `FeedbackForm`), navegación (`SiteNav`, `AuthNav`, `LogoutButton`) y el cronómetro (`RoutineWidget`, `RoutineContext`, `CtaLink`).
@@ -88,6 +94,12 @@ Tablas con RLS: `signups` y `feedback` (`20260927120000_…`), `routine_sessions
 - `vercel.json`: en cada deploy de producción corre `supabase db push` tras `next build` (`vercel.json:3`).
 - `.claude/`: agentes revisores (`revisor-seguridad`, `revisor-qa`, `revisor-mobile`) y la skill `nueva-entidad` (`.claude/agents/*.md`, `.claude/skills/nueva-entidad/SKILL.md`).
 - `CLAUDE.md`: reglas de trabajo del repo (ramas y PR, migraciones, no tocar producción).
+
+### Contador de racha (Nivel 1, detrás de un interruptor)
+- **Hipótesis y plan:** `product/hypotheses/contador-dias-seguidos.md` (qué se cree, umbrales y regla de decisión) y `product/exposure-plans/2026-11-25-2233-contador-dias-seguidos.md` (Nivel 1: contador; Nivel 2: insignias, aún no construido).
+- **Interruptor:** tabla `feature_flags`, fila `contador_racha`, apagada por defecto. Se cambia en `/admin/interruptores` (`app/admin/interruptores/page.tsx`) con `PATCH /api/admin/flags/[key]`, solo `ADMIN_EMAILS`.
+- **Qué cambia en la app:** con el interruptor encendido, `/cuenta` muestra la tarjeta "Mi racha" (`app/cuenta/page.tsx:37-45`, `app/cuenta/page.tsx:105-114`). Apagado, no hace consulta extra ni dibuja nada más. El estado se lee en cada visita.
+- **Señal:** sección "Contador de racha" de `/admin/metricas` (`app/admin/metricas/page.tsx:111-124`, `app/admin/metricas/page.tsx:147-183`): usuarios elegibles (rutina completada en los 14 días previos a encender), % que suma al menos un día más y promedio antes → después, solo desde la última vez que se encendió.
 
 ### Variables de entorno
 `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `ADMIN_EMAILS` (`lib/supabase-session.ts:9-10`, `lib/supabase-server.ts:9-10`, `lib/admin-emails.ts:4`). En deploy, además `VERCEL_ENV` y `POSTGRES_URL_NON_POOLING` (`vercel.json:3`).
@@ -104,12 +116,12 @@ Tablas con RLS: `signups` y `feedback` (`20260927120000_…`), `routine_sessions
    - **Si no lo exige:** entra directo. Si el proyecto remoto exige confirmación, **sin confirmar**: el `supabase/config.toml` local dice `enable_confirmations = false` (`supabase/config.toml:225`), pero eso configura el Supabase local, no el remoto.
 5. **Redirección a `/cuenta`.** Si hubo sesión, el navegador hace una navegación completa a `/cuenta` (o a `/admin` si el email es admin) (`components/AuthForm.tsx:38-42`). En `/login` el flag de admin sale de `app/api/auth/login/route.ts:17`; en el registro **sin confirmar** que la respuesta incluya `admin` (`app/api/auth/signup/route.ts:26` no lo envía, así que un admin recién registrado iría a `/cuenta`).
 6. **Se registra una visita.** El layout de `/cuenta` llama a `recordVisit()` en cada carga (`app/cuenta/layout.tsx:23`), que guarda una fila por usuario y día (`lib/visits.ts:11-13`).
-7. **Ve el tablero vacío.** Sin datos, `/cuenta` muestra "Aún no registras ninguna.", "Aún no fijas una meta." y "Todavía no hay tips." si no hay tips (`app/cuenta/page.tsx:45-47`, `app/cuenta/page.tsx:78-82`, `app/cuenta/page.tsx:89`). La tarjeta "Mis rutinas" lleva a `/cuenta/rutinas` (`app/cuenta/page.tsx:57-62`).
+7. **Ve el tablero vacío.** Sin datos, `/cuenta` muestra "Aún no registras ninguna.", "Aún no fijas una meta." y "Todavía no hay tips." si no hay tips (`app/cuenta/page.tsx:58-60`, `app/cuenta/page.tsx:91-95`, `app/cuenta/page.tsx:102`). La tarjeta "Mis rutinas" lleva a `/cuenta/rutinas` (`app/cuenta/page.tsx:70-75`).
 8. **Abre "Mis rutinas".** El servidor comprueba la sesión y lee sus sesiones con RLS (`app/cuenta/rutinas/page.tsx:8-17`). Ve el formulario "Registrar una rutina" (`app/cuenta/rutinas/page.tsx:23-26`).
 9. **Llena el formulario.** Elige rutina (obligatoria), marca "Completada" o "La dejé a medias" (por defecto, completada), y opcionalmente escribe una nota (hasta 280) y un peso (`components/SessionForm.tsx:47-70`).
 10. **Envía.** `POST /api/sessions` con `rutina`, `completado`, `nota`, `peso` (`components/SessionForm.tsx:19-28`). El servidor exige sesión (401 si no) y valida la rutina, el booleano, la nota y el peso (`app/api/sessions/route.ts:25-32`).
 11. **Se guarda con RLS.** El `insert` va con la llave pública y la sesión del usuario; `user_id` no viene del cliente, lo pone la base con `default auth.uid()` (`app/api/sessions/route.ts:34-38`, `supabase/migrations/20261012120000_create_routine_sessions.sql:6`). La política de inserción exige que la fila sea suya (`…create_routine_sessions.sql:23-26`).
-12. **Confirmación.** Responde 201; el formulario se limpia, muestra "Sesión registrada." y refresca la lista (`app/api/sessions/route.ts:43`, `components/SessionForm.tsx:35-39`). La sesión aparece arriba en "Mis sesiones" (`app/cuenta/rutinas/page.tsx:27-34`), y ya cuenta en el tablero y en las métricas del admin (`app/cuenta/page.tsx:27`, `app/admin/metricas/page.tsx:38`).
+12. **Confirmación.** Responde 201; el formulario se limpia, muestra "Sesión registrada." y refresca la lista (`app/api/sessions/route.ts:43`, `components/SessionForm.tsx:35-39`). La sesión aparece arriba en "Mis sesiones" (`app/cuenta/rutinas/page.tsx:27-34`), y ya cuenta en el tablero y en las métricas del admin (`app/cuenta/page.tsx:29`, `app/admin/metricas/page.tsx:39`).
 
 Después de la primera sesión, el peso se puede cambiar (`components/SessionWeightEdit.tsx`, `app/api/sessions/[id]/route.ts`); el resto de la sesión no se puede editar (permiso de UPDATE solo sobre `peso`, comentario en `app/api/sessions/[id]/route.ts:7-8`).
 
@@ -121,7 +133,7 @@ Son una **suposición mía** de cuáles son los cambios más probables, a partir
 
 ### A. Agregar, quitar o renombrar una rutina (zona)
 La lista de zonas está repetida en varios sitios y **tienen que coincidir**:
-- `lib/routines.ts:2-9`: la lista `ROUTINES` (la usan el formulario, el admin y las métricas: `components/SessionForm.tsx:52`, `components/AdminTipForm.tsx:80`, `app/admin/rutinas/page.tsx:32`, `app/admin/metricas/page.tsx:73`).
+- `lib/routines.ts:2-9`: la lista `ROUTINES` (la usan el formulario, el admin y las métricas: `components/SessionForm.tsx:52`, `components/AdminTipForm.tsx:80`, `app/admin/rutinas/page.tsx:32`, `app/admin/metricas/page.tsx:75`).
 - Una **migración nueva** en `supabase/migrations/` que cambie el `check` de `routine_sessions.rutina` (`20261012120000_create_routine_sessions.sql:7`) y el de `tips.zona` (`20261013120000_create_tips.sql:8`). El comentario de `lib/routines.ts:1` y de `lib/tips.ts:3` lo recuerdan. Según `CLAUDE.md:29-30`, la migración a la base de desarrollo la aplica quien trabaja desde aquí y la de producción la aplica Vercel.
 - `scripts/seed-datos-prueba.mjs:20-22`: copia propia de la lista y de las tasas de finalización.
 - Nota: las zonas del registro **no** son los movimientos del cronómetro. Los seis movimientos del widget están en `components/RoutineWidget.tsx:10-23` y son independientes de `ROUTINES`.
@@ -148,7 +160,7 @@ El camino del peso muestra qué se toca:
 Tres cosas que suelen hacer perder tiempo a quien llega nuevo. Son observaciones; el código no se ha cambiado.
 
 ### 1. `CLAUDE.md` no coincide del todo con el código
-- **`/cuenta`:** `CLAUDE.md:50` la describe como "pantalla de bienvenida ... aviso de que pronto se registrarán rutinas". En el código es un tablero con tres tarjetas (`app/cuenta/page.tsx:56-92`). Las líneas 53-55 del propio `CLAUDE.md` ya la describen así, de modo que el archivo se contradice a sí mismo.
+- **`/cuenta`:** `CLAUDE.md:50` la describe como "pantalla de bienvenida ... aviso de que pronto se registrarán rutinas". En el código es un tablero con tres tarjetas (`app/cuenta/page.tsx:69-117`). Las líneas 53-55 del propio `CLAUDE.md` ya la describen así, de modo que el archivo se contradice a sí mismo.
 - **Pestañas del admin:** `CLAUDE.md:51` las lista sin "Sesiones", pero existe (`app/admin/layout.tsx:16`).
 - **Pestaña de inicio de cuenta:** `CLAUDE.md:51` la llama "Inicio"; en el código es "Mi cuenta" (`app/cuenta/layout.tsx:11`).
 - **Llave secreta:** la regla de `CLAUDE.md:19` dice que solo se usa en el panel admin, pero también la usan `POST /api/signups` y `POST /api/feedback`, que son públicas (`app/api/signups/route.ts:13`, `app/api/feedback/route.ts:12`). `CLAUDE.md:49` sí lo reconoce; la regla de la línea 19 no.
