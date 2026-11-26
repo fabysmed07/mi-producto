@@ -13,8 +13,6 @@
     --line-soft:#e6e1d3;
     --shadow-soft:0 1px 2px rgba(34,38,30,0.05), 0 10px 26px -16px rgba(34,38,30,0.18);
     --shadow-lift:0 24px 60px -24px rgba(34,38,30,0.35);
-    --revisar-bg:#fff2cf;
-    --revisar-ink:#7a5a12;
   }
 
   @media (prefers-color-scheme: dark){
@@ -32,8 +30,6 @@
       --line-soft:#2a2c21;
       --shadow-soft:0 1px 2px rgba(0,0,0,0.3), 0 10px 26px -16px rgba(0,0,0,0.5);
       --shadow-lift:0 24px 60px -24px rgba(0,0,0,0.6);
-      --revisar-bg:#3a3115;
-      --revisar-ink:#e8c667;
     }
   }
 
@@ -58,13 +54,6 @@
   .mono{font-family:var(--font-plex-mono), ui-monospace, monospace; font-variant-numeric:tabular-nums;}
   .wrap{max-width:1080px; margin:0 auto; padding:0 32px;}
   .prose-wrap{max-width:680px; margin:0 auto; padding:0 32px;}
-
-  .tag-revisar{
-    display:inline-block; font-family:var(--font-plex-mono); font-size:10.5px; font-weight:600;
-    background:var(--revisar-bg); color:var(--revisar-ink);
-    padding:2px 7px; border-radius:5px; letter-spacing:.02em;
-    vertical-align:middle; white-space:nowrap;
-  }
 
   .eyebrow{
     display:inline-flex; align-items:center; gap:7px;
@@ -223,7 +212,6 @@
     .hero-sub{font-size:16.5px;}
     .hero-cta{flex-direction:column; align-items:flex-start;}
     .final-cta .hero-cta{align-items:center;}
-    .tag-revisar{white-space:normal;}
     .phone{padding:18px 16px 22px;}
     section.essay{padding:56px 0;}
     .essay-num{font-size:150px; right:14px; top:6px;}

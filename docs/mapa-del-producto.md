@@ -31,7 +31,6 @@ Cada persona, desde `/cuenta`, puede:
 **Cosas que conviene saber desde el día uno**
 - **El cronómetro no guarda nada.** `RoutineWidget` no hace ninguna llamada a la API (se leyó el archivo completo: `components/RoutineWidget.tsx`). Registrar una rutina es una acción aparte, manual, en `/cuenta/rutinas`.
 - **"Completada / abandonada" es lo que el usuario declara**, no algo que la app mida (`components/SessionForm.tsx:57-61`). No se guarda duración ni en qué minuto se abandonó (no hay tales columnas en `supabase/migrations/20261012120000_create_routine_sessions.sql:4-11`).
-- **Hay textos marcados `[REVISAR]` visibles al público** en el widget (`components/RoutineWidget.tsx:167` y `components/RoutineWidget.tsx:220`), con estilo propio en `app/(site)/globals.css:62`. Son copy pendiente de revisar; no parece intencional dejarlos en producción (**sin confirmar** la intención).
 - Es un prototipo y la app no cobra nada: no hay código de pagos en las rutas de `app/api/` (listado de `app/api/`). Que "pagos e IA se simulan" viene de `CLAUDE.md:26`, no de código.
 
 ---
@@ -148,7 +147,6 @@ El camino del peso muestra qué se toca:
 
 ### C. Cambiar el texto o la experiencia de la landing y el cronómetro
 - Textos de la landing: `app/(site)/page.tsx` (titular y subtítulo en `:38-39`, ensayo en `:50-75`, cierre en `:79-80`).
-- Los `[REVISAR]` pendientes: `components/RoutineWidget.tsx:167` y `:220`.
 - Movimientos, indicaciones y duración del cronómetro: `components/RoutineWidget.tsx:6` (`DUR = 60` segundos por movimiento) y `:10-23` (`STEPS`).
 - Estilos: `app/(site)/globals.css`. Ojo: `CLAUDE.md:24` pide no cambiar el diseño sin que se pida.
 - Si el cambio fuera que el cronómetro **guarde la sesión sola** al terminar (hoy no lo hace), habría que llamar a `POST /api/sessions` desde `components/RoutineWidget.tsx` y decidir qué rutina (zona) registrar, porque el widget no tiene ese concepto. Es una idea, no algo que el código ya prepare (**sin confirmar** que sea lo que se quiere).
@@ -190,5 +188,4 @@ Tres cosas que suelen hacer perder tiempo a quien llega nuevo. Son observaciones
 - El contenido de las migraciones `20261003…`, `20261008…`, `20261024…` y `20261024130000…`, y de `app/api/auth/logout`, `app/api/tips`, `app/api/goals/[id]` y `app/api/admin/tips/[id]`: no se leyeron enteros.
 - Qué hace exactamente `scripts/seed-datos-prueba.mjs`.
 - Que ningún componente cliente no revisado hable con Supabase; solo se verificaron `AuthForm` y `SessionForm`.
-- Si los `[REVISAR]` visibles son intencionales.
 - Que lo descrito en `CLAUDE.md` sobre pagos e IA simulados corresponda a código: en las rutas de API no hay nada de pagos.

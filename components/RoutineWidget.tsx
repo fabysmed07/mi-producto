@@ -164,7 +164,7 @@ export default function RoutineWidget() {
       style={style}
     >
       <div className="phone-head">
-        <span>TU RUTINA <span className="tag-revisar" style={{ marginLeft: 4 }}>[REVISAR]</span></span>
+        <span>TU RUTINA</span>
         <span>6:00</span>
       </div>
       <div className="seg" role="group" aria-label="Posición de la rutina">
@@ -217,7 +217,7 @@ export default function RoutineWidget() {
           />
         ))}
       </div>
-      <div className="routine-note">Misma rutina: los movimientos se adaptan a tu posición <span className="tag-revisar">[REVISAR]</span></div>
+      <div className="routine-note">Misma rutina: los movimientos se adaptan a tu posición</div>
     </div>
   );
 }
