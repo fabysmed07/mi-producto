@@ -342,7 +342,8 @@
 [data-running="true"] .vb-breath .out{animation:vb-out 8s ease-in-out infinite;}
 @keyframes vb-in{0%{opacity:0;} 12%,38%{opacity:1;} 50%,100%{opacity:0;}}
 @keyframes vb-out{0%,50%{opacity:0;} 62%,88%{opacity:1;} 100%{opacity:0;}}
-.vb-now{text-align:center; margin-top:16px; min-height:104px;}
+/* Alto fijo para un título de dos líneas: así los botones no se mueven entre movimientos. */
+.vb-now{text-align:center; margin-top:16px; min-height:132px;}
 .vb-kicker{font-size:10.5px; font-weight:600; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-faint);}
 .vb-now h3{font-size:23px; line-height:1.2; margin-top:5px;}
 .vb-now p{margin:7px auto 0; font-size:13.5px; line-height:1.5; color:var(--ink-soft); max-width:27ch;}
