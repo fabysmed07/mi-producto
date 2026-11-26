@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { routineLabel } from '@/lib/routines';
 import type { WeeklyGoal } from '@/lib/goals';
+import { getFlag } from '@/lib/feature-flags';
+import { currentStreak } from '@/lib/streak';
 import { getSupabaseSession, getUser } from '@/lib/supabase-session';
 
 export const dynamic = 'force-dynamic';
@@ -30,6 +32,17 @@ export default async function CuentaPage() {
     supabase.from('weekly_goals').select('id, dias_por_semana, fecha_inicio, created_at').lte('fecha_inicio', iso(now)).order('created_at', { ascending: false }).limit(1),
     supabase.from('tips').select('consejo_dia').order('created_at', { ascending: false }).limit(1),
   ]);
+
+  // Interruptor "contador_racha": apagado, la página no hace ninguna consulta extra ni dibuja nada más.
+  let streak: number | null = null;
+  if ((await getFlag('contador_racha')).enabled) {
+    const { data, error } = await supabase
+      .from('routine_sessions')
+      .select('created_at')
+      .eq('completado', true)
+      .gte('created_at', new Date(now.getTime() - 366 * DAY_MS).toISOString());
+    if (!error) streak = currentStreak((data ?? []).map((s) => s.created_at as string), now);
+  }
 
   const week = weekRes.data ?? [];
   const last = lastRes.data?.[0];
@@ -89,6 +102,17 @@ export default async function CuentaPage() {
           {tip ? <p className="summary-quote">{tip}</p> : <div className="metric-hint" style={{ margin: '8px 0 6px' }}>Todavía no hay tips.</div>}
           <span className="summary-cta">Ver todos los tips →</span>
         </Link>
+
+        {streak !== null && (
+          <Link href="/cuenta/rutinas" className="panel summary-card">
+            <div className="metric-label">Mi racha</div>
+            <div className="summary-main">{streak}<small>{streak === 1 ? 'día seguido' : 'días seguidos'}</small></div>
+            <div className="metric-hint">
+              {streak > 0 ? 'Días seguidos con al menos una rutina completada.' : 'Completa una rutina hoy para empezar tu racha.'}
+            </div>
+            <span className="summary-cta">Registrar una rutina →</span>
+          </Link>
+        )}
       </div>
     </main>
   );

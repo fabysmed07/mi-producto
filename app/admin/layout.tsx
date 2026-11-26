@@ -15,6 +15,7 @@ const TABS = [
   { href: '/admin/rutinas', label: 'Rutinas' },
   { href: '/admin/sesiones', label: 'Sesiones' },
   { href: '/admin/tips', label: 'Tips' },
+  { href: '/admin/interruptores', label: 'Interruptores' },
 ];
 
 export const metadata: Metadata = {
